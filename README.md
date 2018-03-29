@@ -14,7 +14,7 @@
         Usuário X, Item Y
 
         ```bash
-        $ programa arquivo.csv --user=USER --item=ITEM
+        $ recommender ARQUIVO USUARIO ITEM
         ```
 
 - Saída:
