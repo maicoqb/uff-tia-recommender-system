@@ -3,7 +3,7 @@ import csv
 import os
 import sys
 
-from src.FileManager import FileManager
+from src import FileManager
 
 class FileManagerTestCase(unittest.TestCase):
 
@@ -34,7 +34,7 @@ class FileManagerTestCase(unittest.TestCase):
         ]
         self.cria_arquivo(usuarios_x_avaliacoes)
 
-        fileManager = FileManager(self.test_arquivo_csv)
+        fileManager = FileManager.FileManager(self.test_arquivo_csv)
         users = fileManager.getUsers()
         items = fileManager.getItems()
 

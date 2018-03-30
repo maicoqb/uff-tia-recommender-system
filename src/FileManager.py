@@ -19,7 +19,7 @@ class FileManager:
                 if not len(self.items):
                     for i in range(0, len(row)):
                         self.items.append('')
-
+        pass
 
     def getUsers(self):
         return self.users
