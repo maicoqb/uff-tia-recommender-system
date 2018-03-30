@@ -1,6 +1,6 @@
 # Sistema de Recomendação
 
-## Trabalho de programação
+## Descrição do trabalho
 
 ### Programa em Python, Java ou C
 

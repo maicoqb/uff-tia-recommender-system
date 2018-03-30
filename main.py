@@ -6,6 +6,9 @@ Sistema de Recomendação
 """
 
 def main(args):
+    ## deve ler as informações do arquivo
+    ## deve pegar as informações do usuário
+    ## deve pegar as informações do item
     pass
 
 if __name__ == "__main__":
