@@ -1,9 +1,8 @@
 import unittest
 import csv
 import os
-import sys
 
-from src import FileManager
+from src.FileManager import FileManager
 
 class FileManagerTestCase(unittest.TestCase):
 
@@ -19,6 +18,14 @@ class FileManagerTestCase(unittest.TestCase):
         ## remove o arquivo quando terminar os testes
         os.remove(self.test_arquivo_csv)
 
+    def criar_arquivo_com_3_usuarios_e_10_itens(self):
+        usuarios_x_avaliacoes = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+            [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+        ]
+        self.cria_arquivo(usuarios_x_avaliacoes)
+
     def test_deve_ler_as_informacoes_do_arquivo(self):
         """
         Dado um arquivo com 3 linhas
@@ -27,14 +34,9 @@ class FileManagerTestCase(unittest.TestCase):
         Deve gerar uma lista de 3 usuários
         E uma lista com 10 itens
         """
-        usuarios_x_avaliacoes = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-            [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-        ]
-        self.cria_arquivo(usuarios_x_avaliacoes)
+        self.criar_arquivo_com_3_usuarios_e_10_itens()
 
-        fileManager = FileManager.FileManager(self.test_arquivo_csv)
+        fileManager = FileManager(self.test_arquivo_csv)
         users = fileManager.getUsers()
         items = fileManager.getItems()
 
