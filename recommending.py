@@ -13,12 +13,12 @@ def RepresentsInt(s):
         return False
 
 def main():
-    #import numpy as np
+    import numpy as np
     import pandas as pd
+    #import math 
     
     #Lê o arquivo csv usando a biblioteca Pandas
     
-    #fields=["Users/Items",	"Item1",	"Item2",	"Item3",	"Item4",	"Item5",	"Item6",	"Item7",	"Item8",	"Item9",	"Item10"];
     data = pd.read_csv("Dataset-grad.csv", header=0, sep=";");
     
     #Recolhe input do usuario
@@ -32,28 +32,29 @@ def main():
     #Seleciona a linha e coluna desejada em vetores para manipulacao
     linhaUsuario = data.iloc[int(usuarioX)]
     colunaItem = data.iloc[:,int(itemY)]
-    
-    #O número de itens avaliados pelo Usuário X
-    
+
+
     #-----------------------------DEBUG----------------------------------
     #print("Itens avaliados pelo usuario("+usuarioX+"): \n")
     #print(linhaUsuario)
     #-----------------------------DEBUG----------------------------------
     
+    #O número de itens avaliados pelo Usuário X
     totalItens = 0;
     for i in linhaUsuario:
         if(i!="?" and RepresentsInt(i)):
             totalItens += 1;
     print("--> Total itens avaliados por Usuario("+usuarioX+"): "+str(totalItens))
-    
-    
-    #O número de usuários que avaliaram o Item Y
     print("\n")
+    
+    
+    
     #-----------------------------DEBUG----------------------------------
     #print("Usarios que avaliaram o item("+itemY+"): \n")
     #print(colunaItem)
     #-----------------------------DEBUG----------------------------------
     
+    #O número de usuários que avaliaram o Item Y
     totalUsuarios = 0;
     for j in colunaItem:
         if(j!="?" and RepresentsInt(j)):
