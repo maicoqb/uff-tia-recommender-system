@@ -10,32 +10,40 @@ import pandas as pd
 #import math 
 
 def correlacaoPearson(usuarioA,usuarioB):
-        #-----------------------------DEBUG----------------------------------
-        #print(usuarioA)
-        #print(usuarioB)
-        #-----------------------------DEBUG----------------------------------
+    #-----------------------------DEBUG----------------------------------
+    #print(usuarioA)
+    #print(usuarioB)
+    #-----------------------------DEBUG----------------------------------
+
+    #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
+    #ou seja, remover do vetor de comparacao os "?"    
+    for idx,i in enumerate(usuarioA):
+            if(i=="?"):                    
+                usuarioA=np.delete(usuarioA, idx);
+                usuarioB=np.delete(usuarioB, idx);
+    for idx,j in enumerate(usuarioB):
+            if(j=="?"):
+                usuarioA=np.delete(usuarioA, idx);
+                usuarioB=np.delete(usuarioB, idx);
     
-        #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
-        #ou seja, remover do vetor de comparacao os "?"    
-        for idx,i in enumerate(usuarioA):
-                if(i=="?"):                    
-                    usuarioA=np.delete(usuarioA, idx);
-                    usuarioB=np.delete(usuarioB, idx);
-        for idx,j in enumerate(usuarioB):
-                if(j=="?"):
-                    usuarioA=np.delete(usuarioA, idx);
-                    usuarioB=np.delete(usuarioB, idx);
-        
-        usuarioA = usuarioA.astype(int)
-        usuarioB = usuarioB.astype(int)
-        
-        #-----------------------------DEBUG----------------------------------
-        #print(usuarioA)
-        #print(usuarioB)
-        #-----------------------------DEBUG----------------------------------
-        
-        #chama a biblioteca PearsonR passando 2 vetores
-        return pearsonr(usuarioA,usuarioB)[0];
+    usuarioA = usuarioA.astype(int)
+    usuarioB = usuarioB.astype(int)
+    
+    #-----------------------------DEBUG----------------------------------
+    #print(usuarioA)
+    #print(usuarioB)
+    #-----------------------------DEBUG----------------------------------
+    
+    #chama a biblioteca PearsonR passando 2 vetores
+    return pearsonr(usuarioA,usuarioB)[0];
+
+
+def media(vetor):
+    for idx,i in enumerate(vetor):
+        if(i=="?"):                    
+            vetor=np.delete(vetor, idx);
+    return np.mean(vetor.astype(int));
+
 
 def main():
     
@@ -93,12 +101,54 @@ def main():
 
     
     #DICA:   Usar pearsonr para realizar a correlacao Pearson de dois vetores
-    print("\n")    
-    print("Exemplo de correlação de Pearson entre 2 usuários quaisquer")
-    print(correlacaoPearson(data.iloc[8].values,data.iloc[2].values))
+    #print("\n")    
+    #print("Exemplo de correlação de Pearson entre 2 usuários quaisquer: ")
+    #print(correlacaoPearson(data.iloc[8].values,data.iloc[2].values))
+     
+    #Para cada item nao avaliado dar uma predicao baseada nos Usuarios
+    naoAvaliados = []    
+    for idx,i in enumerate(linhaUsuario):
+        if(i=="?"):
+            naoAvaliados.append(idx);
+  
+    # Soma 1 aos indices para identificar os itens, indice 0 == item 1
+    print("Itens nao avaliados: "+str(np.array(naoAvaliados)+1))
     
-    
-    
+    for j in naoAvaliados:
+        #Implementacao Predicao "User-Based"
+        somatorioNumerador = 0
+        somatorioDenominador = 0
+        for i in data.index:
+            linhaUsuarioAtual =  data.iloc[i].values
+            
+            if(i!=int(usuarioX) and linhaUsuarioAtual[int(j)]!="?"):
+                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);
+                
+                somatorioDenominador += pearsonTemp
+                
+                rbp = int(linhaUsuarioAtual[int(j)]);
+                
+                mediaUsuarioAtual = media(linhaUsuarioAtual);
+                
+                subtractvalue = rbp - mediaUsuarioAtual
+                
+                somatorioNumerador += pearsonTemp * subtractvalue
+                
+        print(somatorioNumerador);
+        print(somatorioDenominador);
+        print("\n");
+        
+        print(linhaUsuario.values)
+        print(media(linhaUsuario.values))
+        razao = somatorioNumerador / somatorioDenominador
+        print(razao)
+        predict = media(linhaUsuario.values) + razao
+        print("Predicao do Item("+str(j+1)+") para o Usuario("+usuarioX+"): " +str(predict));
+        
+        
+            
+        
+        
     
 
             
