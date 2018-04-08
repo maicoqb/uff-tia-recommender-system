@@ -16,9 +16,9 @@ def main():
     import numpy as np
     import pandas as pd
     #import math 
+    from scipy.stats.mstats import pearsonr
     
-    #Lê o arquivo csv usando a biblioteca Pandas
-    
+    #Lê o arquivo csv usando a biblioteca Pandas    
     data = pd.read_csv("Dataset-grad.csv", header=0, sep=";");
     
     #Recolhe input do usuario
@@ -69,3 +69,6 @@ def main():
     else:
         print("--> O usuário avaliou o item("+itemY+")");
 
+    
+    #DICA:   Usar pearsonr para realizar a correlacao Pearson de dois vetores
+    print(pearsonr([1,2,3,4],[2,3,4,5]))
