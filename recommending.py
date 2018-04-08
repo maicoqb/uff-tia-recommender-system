@@ -19,7 +19,7 @@ def main():
     #Lê o arquivo csv usando a biblioteca Pandas
     
     #fields=["Users/Items",	"Item1",	"Item2",	"Item3",	"Item4",	"Item5",	"Item6",	"Item7",	"Item8",	"Item9",	"Item10"];
-    data = pd.read_csv("C:/Users/Eduar/Documents/github/recommending system/Dataset-grad.csv", header=0, sep=";");
+    data = pd.read_csv("Dataset-grad.csv", header=0, sep=";");
     
     #Recolhe input do usuario
     usuarioX = input("Digite 'Usuário X': ")
