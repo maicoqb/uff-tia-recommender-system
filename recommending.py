@@ -18,8 +18,7 @@ def correlacaoPearson(usuarioA,usuarioB):
         #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
         #ou seja, remover do vetor de comparacao os "?"    
         for idx,i in enumerate(usuarioA):
-                if(i=="?"):
-                    print("Index: " +str(idx))
+                if(i=="?"):                    
                     usuarioA=np.delete(usuarioA, idx);
                     usuarioB=np.delete(usuarioB, idx);
         for idx,j in enumerate(usuarioB):
@@ -35,6 +34,7 @@ def correlacaoPearson(usuarioA,usuarioB):
         #print(usuarioB)
         #-----------------------------DEBUG----------------------------------
         
+        #chama a biblioteca PearsonR passando 2 vetores
         return pearsonr(usuarioA,usuarioB)[0];
 
 def main():
@@ -93,8 +93,9 @@ def main():
 
     
     #DICA:   Usar pearsonr para realizar a correlacao Pearson de dois vetores
-    print("\n")
-    print(correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[int(usuarioX)+1].values))
+    print("\n")    
+    print("Exemplo de correlação de Pearson entre 2 usuários quaisquer")
+    print(correlacaoPearson(data.iloc[8].values,data.iloc[2].values))
     
     
     
