@@ -45,15 +45,25 @@ def media(vetor):
     return np.mean(vetor.astype(int));
 
 
-def main():
+def test():
+    for i in range(1,30):
+        print(i);
+        main(i,8);
+
+def main(x,y):
     
     #Lê o arquivo csv usando a biblioteca Pandas    
     data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1);
     
     #Recolhe input do usuario
-    usuarioX = input("Digite 'Usuário X': ")
-    itemY = input("Digite 'Item Y': ")
+    #usuarioX = input("Digite 'Usuário X': ")
+    #itemY = input("Digite 'Item Y': ")
     print("\n")
+    usuarioX=x;
+    itemY=y;
+    
+    usuarioX=str(int(usuarioX)-1)
+    itemY=str(int(itemY)-1)
     
     linhaUsuario = []
     colunaItem = []
@@ -74,7 +84,7 @@ def main():
     for i in linhaUsuario:
         if(i!="?"):
             totalItens += 1;
-    print("--> Total itens avaliados por Usuario("+usuarioX+"): "+str(totalItens))
+    print("--> Total itens avaliados por Usuario("+str(int(usuarioX)+1)+"): "+str(totalItens))
     print("\n")
     
     
@@ -89,61 +99,62 @@ def main():
     for j in colunaItem:
         if(j!="?"):
             totalUsuarios += 1;
-    print("--> Total usuarios que avaliaram o Item("+itemY+"): "+str(totalUsuarios))
+    print("--> Total usuarios que avaliaram o Item("+str(int(itemY)+1)+"): "+str(totalUsuarios))
     print("\n")
     
     
     #Se o Usuário X avaliou o Item Y
     if(linhaUsuario[int(itemY)]=="?"):
-        print("--> O usuário NÃO avaliou o item("+itemY+")");
+        print("--> O usuário NÃO avaliou o item("+str(int(itemY)+1)+")");
     else:
-        print("--> O usuário avaliou o item("+itemY+")");
+        print("--> O usuário avaliou o item("+str(int(itemY)+1)+")");
 
     
-    #DICA:   Usar pearsonr para realizar a correlacao Pearson de dois vetores
-    #print("\n")    
-    #print("Exemplo de correlação de Pearson entre 2 usuários quaisquer: ")
-    #print(correlacaoPearson(data.iloc[8].values,data.iloc[2].values))
-     
     #Para cada item nao avaliado dar uma predicao baseada nos Usuarios
     naoAvaliados = []    
     for idx,i in enumerate(linhaUsuario):
         if(i=="?"):
             naoAvaliados.append(idx);
+            
   
-    # Soma 1 aos indices para identificar os itens, indice 0 == item 1
-    print("Itens nao avaliados: "+str(np.array(naoAvaliados)+1))
+    # Soma 1 aos indices no print pois indice 0 == item 1
+    print("\n")
+    print("--> Itens nao avaliados: "+str(np.array(naoAvaliados)+1))
     
+    
+    #Para cada item não avaliado pelo Usuario fazer a Predicao "User-Based"
     for j in naoAvaliados:
-        #Implementacao Predicao "User-Based"
+        
         somatorioNumerador = 0
         somatorioDenominador = 0
+        #Varrer todos os usuarios
         for i in data.index:
-            linhaUsuarioAtual =  data.iloc[i].values
+            #Ratings do usuario atual
+            linhaUsuarioAtual =  data.iloc[i].values     
             
+            #Apenas faço o calculo para outros usuarios AND se eles tiverem avaliado o item que queremos fazer a predição
             if(i!=int(usuarioX) and linhaUsuarioAtual[int(j)]!="?"):
-                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);
                 
-                somatorioDenominador += pearsonTemp
-                
-                rbp = int(linhaUsuarioAtual[int(j)]);
-                
-                mediaUsuarioAtual = media(linhaUsuarioAtual);
-                
-                subtractvalue = rbp - mediaUsuarioAtual
-                
-                somatorioNumerador += pearsonTemp * subtractvalue
-                
-        print(somatorioNumerador);
-        print(somatorioDenominador);
-        print("\n");
+                #Formula matematica da predicao (slide 38)
+                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);                
+                somatorioDenominador += pearsonTemp;                
+                rbp = int(linhaUsuarioAtual[int(j)]);                
+                mediaUsuarioAtual = media(linhaUsuarioAtual);                
+                subtractvalue = rbp - mediaUsuarioAtual;                            
+                somatorioNumerador += pearsonTemp * subtractvalue;        
+            
         
-        print(linhaUsuario.values)
-        print(media(linhaUsuario.values))
-        razao = somatorioNumerador / somatorioDenominador
-        print(razao)
+        razao = somatorioNumerador / somatorioDenominador    
+        
+        #-----------------------------DEBUG----------------------------------
+        #print(somatorioNumerador);
+        #print(somatorioDenominador);
+        #print(media(linhaUsuario.values))
+        #-----------------------------DEBUG----------------------------------
+        
         predict = media(linhaUsuario.values) + razao
-        print("Predicao do Item("+str(j+1)+") para o Usuario("+usuarioX+"): " +str(predict));
+        
+        print("     -->Predicao do Item("+str(j+1)+") para o Usuario("+str(int(usuarioX)+1)+"): " +str(predict));
         
         
             
