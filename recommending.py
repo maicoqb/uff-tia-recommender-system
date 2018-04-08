@@ -4,22 +4,43 @@ Created on Sun Apr  8 14:23:57 2018
 
 @author: Eduar
 """
+from scipy.stats.mstats import pearsonr
+import numpy as np
+import pandas as pd
+#import math 
 
-def RepresentsInt(s):
-    try: 
-        int(s)
-        return True
-    except ValueError:
-        return False
+def correlacaoPearson(usuarioA,usuarioB):
+        #-----------------------------DEBUG----------------------------------
+        #print(usuarioA)
+        #print(usuarioB)
+        #-----------------------------DEBUG----------------------------------
+    
+        #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
+        #ou seja, remover do vetor de comparacao os "?"    
+        for idx,i in enumerate(usuarioA):
+                if(i=="?"):
+                    print("Index: " +str(idx))
+                    usuarioA=np.delete(usuarioA, idx);
+                    usuarioB=np.delete(usuarioB, idx);
+        for idx,j in enumerate(usuarioB):
+                if(j=="?"):
+                    usuarioA=np.delete(usuarioA, idx);
+                    usuarioB=np.delete(usuarioB, idx);
+        
+        usuarioA = usuarioA.astype(int)
+        usuarioB = usuarioB.astype(int)
+        
+        #-----------------------------DEBUG----------------------------------
+        #print(usuarioA)
+        #print(usuarioB)
+        #-----------------------------DEBUG----------------------------------
+        
+        return pearsonr(usuarioA,usuarioB)[0];
 
 def main():
-    import numpy as np
-    import pandas as pd
-    #import math 
-    from scipy.stats.mstats import pearsonr
     
     #Lê o arquivo csv usando a biblioteca Pandas    
-    data = pd.read_csv("Dataset-grad.csv", header=0, sep=";");
+    data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1);
     
     #Recolhe input do usuario
     usuarioX = input("Digite 'Usuário X': ")
@@ -33,16 +54,17 @@ def main():
     linhaUsuario = data.iloc[int(usuarioX)]
     colunaItem = data.iloc[:,int(itemY)]
 
-
+    
     #-----------------------------DEBUG----------------------------------
     #print("Itens avaliados pelo usuario("+usuarioX+"): \n")
-    #print(linhaUsuario)
+    #print(linhaUsuario.values)
+    #print("\n "+linhaUsuario[0])
     #-----------------------------DEBUG----------------------------------
     
     #O número de itens avaliados pelo Usuário X
     totalItens = 0;
     for i in linhaUsuario:
-        if(i!="?" and RepresentsInt(i)):
+        if(i!="?"):
             totalItens += 1;
     print("--> Total itens avaliados por Usuario("+usuarioX+"): "+str(totalItens))
     print("\n")
@@ -57,7 +79,7 @@ def main():
     #O número de usuários que avaliaram o Item Y
     totalUsuarios = 0;
     for j in colunaItem:
-        if(j!="?" and RepresentsInt(j)):
+        if(j!="?"):
             totalUsuarios += 1;
     print("--> Total usuarios que avaliaram o Item("+itemY+"): "+str(totalUsuarios))
     print("\n")
@@ -71,4 +93,14 @@ def main():
 
     
     #DICA:   Usar pearsonr para realizar a correlacao Pearson de dois vetores
-    print(pearsonr([1,2,3,4],[2,3,4,5]))
+    print("\n")
+    print(correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[int(usuarioX)+1].values))
+    
+    
+    
+    
+
+            
+        
+    
+    
