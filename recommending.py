@@ -48,19 +48,19 @@ def media(vetor):
 def test():
     for i in range(1,30):
         print(i);
-        main(i,8);
+        #main(i,8);
 
-def main(x,y):
+def main():
     
     #Lê o arquivo csv usando a biblioteca Pandas    
     data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1);
     
     #Recolhe input do usuario
-    #usuarioX = input("Digite 'Usuário X': ")
-    #itemY = input("Digite 'Item Y': ")
+    usuarioX = input("Digite 'Usuário X': ")
+    itemY = input("Digite 'Item Y': ")
     print("\n")
-    usuarioX=x;
-    itemY=y;
+    
+    
     
     usuarioX=str(int(usuarioX)-1)
     itemY=str(int(itemY)-1)
