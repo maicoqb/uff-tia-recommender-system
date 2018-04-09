@@ -15,14 +15,20 @@ class RecommenderSystem:
     
     def getUser(self, userN):
         userRow = self.fileManager.getRow(userN)
-        return User(len(userRow))
+        return User(userRow)
     
     def getItem(self, itemN):
         itemColumn = self.fileManager.getColumn(itemN)
         return Item(len(itemColumn))
     
     def hasRating(self, userN, itemN):
-        return True
+        try:
+            user = self.getUser(userN)
+            review = user.getReview(itemN)
+        except Exception:
+            return False
+
+        return review != '?'
     
     def getRating(self, userN, itemN):
         return 1

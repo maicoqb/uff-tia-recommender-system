@@ -35,7 +35,7 @@ class RecommenderSystemTestCase(unittest.TestCase):
         rs = RecommenderSystemBuilder() \
                 .aRecommenderSystem() \
                 .with5Users() \
-                .with3ItemEach() \
+                .with3ItemsEach() \
                 .build()
 
         user5Items = rs.getUser(5).getReviewsLength()
@@ -58,3 +58,61 @@ class RecommenderSystemTestCase(unittest.TestCase):
         item1users = rs.getItem(1).getReviewsLength()
 
         self.assertEqual(3, item1users)
+
+    def test_verifica_se_ha_analises(self):
+        """
+        Dado: um sistema de recomendações com 3 usuários
+        E cada usuário com 3 itens
+        Quando: eu verificar se existe análise
+        Então: deve haver correlação para todos usuários e itens
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .with3Users() \
+                .with3ItemsEach() \
+                .build()
+        
+        hasRatings = []
+        for user in range(0,3):
+            for item in range(0,3):
+                hasRatings.append( rs.hasRating(user, item) )
+        
+        for hasRating in hasRatings:
+            self.assertTrue(hasRating)
+
+    def test_verifica_se_ha_analises_quando_estiver_fora_da_colecao(self):
+        """
+        Dado: um sistema de recomendações com 1 usuário
+        E este usuário possuir apenas 1 recomendação
+        Quando: eu verificar se existe recomendação para um usuário que não exista
+        Ou eu verificar se existe recomendação para um item que não exista
+        Então: não deve haver recomendação para estes casos
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .with1User() \
+                .with1ItemEach() \
+                .build()
+        
+        hasRatingUsuario2 = rs.hasRating(2, 1)
+        hasRatingItem2 = rs.hasRating(1, 2)
+
+        self.assertFalse(hasRatingUsuario2)
+        self.assertFalse(hasRatingItem2)
+    
+    def test_verifica_se_ha_analises_quando_nao_houver(self):
+        """
+        Dado: um sistema de recomendações com 1 usuário
+        E este usuário com recomendações apenas para os items 1 e 3
+        Quando: eu verificar se existe recomendação para o item 2
+        Então: não deve haver recomendação para este item
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .with1User() \
+                .withOnlyItem1And3() \
+                .build()
+        
+        hasRatingItem2 = rs.hasRating(1,2)
+
+        self.assertFalse(hasRatingItem2)

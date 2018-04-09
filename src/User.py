@@ -1,8 +1,11 @@
 
 
 class User:
-    def __init__(self, reviews=1):
+    def __init__(self, reviews=[]):
         self.reviews = reviews
 
     def getReviewsLength(self):
-        return self.reviews
+        return len(self.reviews)
+    
+    def getReview(self, idx):
+        return self.reviews[idx-1]

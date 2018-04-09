@@ -18,14 +18,17 @@ class FileManagerBuilder:
         return self
     
     def withItems(self, amount):
-        self.items = amount
+        return self.withItemsList(range(0, amount))
+
+    def withItemsList(self, list):
+        self.items = list
         return self
 
     def __createFile(self):
         with open(self.filename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             for _ in range(0, self.users):
-                writer.writerow([1] * self.items)
+                writer.writerow(self.items)
 
     def build(self):
         self.__createFile()
