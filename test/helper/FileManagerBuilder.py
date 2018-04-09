@@ -5,9 +5,11 @@ from src.FileManager import FileManager
 class FileManagerBuilder:
 
     filename = 'test_arquivo.csv'
-    users = 1
-    items = []
-    itemsN = []
+    
+    def __init__(self):
+        self.users = 1
+        self.items = []
+        self.itemsN = []
 
     def aFileManager(self):
         return FileManagerBuilder()
@@ -24,8 +26,8 @@ class FileManagerBuilder:
         return self
     
     def withItemsListForN(self, n, itemList):
-        while n >= len(self.itemsN): self.itemsN.append([])
-        self.itemsN[n] = itemList
+        while n > len(self.itemsN): self.itemsN.append([])
+        self.itemsN[n-1] = itemList
         return self
 
     def __createFile(self):

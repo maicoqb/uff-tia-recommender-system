@@ -133,3 +133,25 @@ class RecommenderSystemTestCase(unittest.TestCase):
         ratingUser1Item1 = rs.getRating(1, 1)
 
         self.assertEqual(10, ratingUser1Item1)
+
+    def test_pega_o_resultado_de_uma_analise_com_varios_usuarios_e_itens(self):
+        """
+        Dado: um sistema de recomendação com n=15 usuário
+        E estes usuários cada qual com m=5 avaliações de itens
+        Quando: eu pedir a avaliação de um item
+        Então: deve me retornar n*m como avaliação
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .with5Users() \
+                .with5ItemsNM() \
+                .build()
+        
+        ratingUser2Item1 = rs.getRating(2, 1)
+        ratingUser3Item4 = rs.getRating(3, 4)
+        ratingUser5Item5 = rs.getRating(5, 5)
+
+        self.assertEqual(2*1, ratingUser2Item1)
+        self.assertEqual(3*4, ratingUser3Item4)
+        self.assertEqual(5*5, ratingUser5Item5)
+    
