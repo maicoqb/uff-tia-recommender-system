@@ -24,7 +24,8 @@ class FileManagerBuilder:
     def __createFile(self):
         with open(self.filename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerow([1])
+            for _ in range(0, self.users):
+                writer.writerow([1] * self.items)
 
     def build(self):
         self.__createFile()

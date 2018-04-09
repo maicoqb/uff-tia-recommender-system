@@ -2,17 +2,24 @@
 from .User import User
 from .Item import Item
 
+from .FileManager import FileManager
+
 class RecommenderSystem:
 
     def __init__(self, fileManager):
+        """
+        :param FileManager fileManager: 
+        """
         self.fileManager = fileManager
         pass
     
     def getUser(self, userN):
-        return User()
+        userRow = self.fileManager.getRow(userN)
+        return User(len(userRow))
     
     def getItem(self, itemN):
-        return Item()
+        itemColumn = self.fileManager.getColumn(itemN)
+        return Item(len(itemColumn))
     
     def hasRating(self, userN, itemN):
         return True

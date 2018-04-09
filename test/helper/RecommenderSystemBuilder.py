@@ -14,8 +14,16 @@ class RecommenderSystemBuilder:
         self.fmb.withUsers(3)
         return self
     
+    def with5Users(self):
+        self.fmb.withUsers(5)
+        return self
+    
     def with1ItemEach(self):
         self.fmb.withItems(1)
+        return self
+
+    def with3ItemEach(self):
+        self.fmb.withItems(3)
         return self
         
     def build(self):
