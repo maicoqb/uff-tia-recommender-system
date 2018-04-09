@@ -23,15 +23,15 @@ class RecommenderSystem:
     
     def hasRating(self, userN, itemN):
         try:
-            user = self.getUser(userN)
-            review = user.getReview(itemN)
+            review = self.getRating(userN, itemN)
         except Exception:
             return False
 
         return review != '?'
     
     def getRating(self, userN, itemN):
-        return 1
+        user = self.getUser(userN)
+        return user.getReview(itemN)
     
     def getUserBasedPrediction(self, userN, itemN):
         return 1

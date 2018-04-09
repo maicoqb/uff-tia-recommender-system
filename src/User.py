@@ -8,4 +8,5 @@ class User:
         return len(self.reviews)
     
     def getReview(self, idx):
-        return self.reviews[idx-1]
+        review = self.reviews[idx-1]
+        return review if review == '?' else int(review)

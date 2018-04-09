@@ -116,3 +116,20 @@ class RecommenderSystemTestCase(unittest.TestCase):
         hasRatingItem2 = rs.hasRating(1,2)
 
         self.assertFalse(hasRatingItem2)
+
+    def test_pega_o_resultado_de_uma_analise(self):
+        """
+        Dado: um sistema de recomendação com 1 usuário
+        E este usuário com avaliação 10 para um item
+        Quando: eu pedir a avaliação deste item
+        Então: deve me retornar 10 como avaliação
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .with1User() \
+                .with1Item(rating=10) \
+                .build()
+        
+        ratingUser1Item1 = rs.getRating(1, 1)
+
+        self.assertEqual(10, ratingUser1Item1)

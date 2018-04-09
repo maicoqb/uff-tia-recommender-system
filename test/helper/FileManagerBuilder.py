@@ -5,10 +5,9 @@ from src.FileManager import FileManager
 class FileManagerBuilder:
 
     filename = 'test_arquivo.csv'
-
-    def __init__(self):
-        self.users = 1
-        self.items = 1
+    users = 1
+    items = []
+    itemsN = []
 
     def aFileManager(self):
         return FileManagerBuilder()
@@ -20,15 +19,24 @@ class FileManagerBuilder:
     def withItems(self, amount):
         return self.withItemsList(range(0, amount))
 
-    def withItemsList(self, list):
-        self.items = list
+    def withItemsList(self, itemList):
+        self.items = itemList
+        return self
+    
+    def withItemsListForN(self, n, itemList):
+        while n >= len(self.itemsN): self.itemsN.append([])
+        self.itemsN[n] = itemList
         return self
 
     def __createFile(self):
         with open(self.filename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
-            for _ in range(0, self.users):
-                writer.writerow(self.items)
+            for i in range(0, self.users):
+                items = self.items
+                if self.itemsN != [] and self.itemsN[i] != []:
+                    items = self.itemsN[i]
+
+                writer.writerow(items)
 
     def build(self):
         self.__createFile()
