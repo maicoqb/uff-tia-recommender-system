@@ -17,6 +17,10 @@ class UserBasedPredictioneerBuilder():
         self.rows = [[1 for _ in range(0,5)] for user in self.rows]
         return self
     
+    def withRatings(self, list):
+        self.rows = list
+        return self
+
     def theUserNWithRatings(self, n, list):
         self.rows[n-1] = list
         return self

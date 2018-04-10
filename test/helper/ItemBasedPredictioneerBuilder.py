@@ -29,24 +29,28 @@ class ItemBasedPredictioneerBuilder():
         self.rows = list
         return self
 
-    def with5x5RatingsWithoutValuesIn(self, withouts, value):
+    def withNRatingsWithoutValues(self, n, withouts, value):
         ratings = []
 
-        for i in range(0,5):
+        for i in range(0,n):
             rating = []
-            for j in range(0,5):
+            for j in range(0,n):
                 without = False
                 for w in withouts: 
                     if [i+1,j+1] == w: without = True
                 if without: rating.append('?')
                 else: rating.append(value)
             ratings.append(rating)
-                
+        
+        return self.withRatings(ratings)
 
+    def with7x7RatingsWithoutValuesIn(self, withouts, value):
         return self.aItemBasedPredictioneer() \
-                .with5Users() \
-                .with5Items() \
-                .withRatings(ratings)
+                .withNRatingsWithoutValues(7, withouts, value)
+
+    def with5x5RatingsWithoutValuesIn(self, withouts, value):
+        return self.aItemBasedPredictioneer() \
+                .withNRatingsWithoutValues(5, withouts, value)
 
 
     def with5x5RatingValue(self, value):
