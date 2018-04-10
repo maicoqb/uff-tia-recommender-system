@@ -197,5 +197,24 @@ class RecommenderSystemTestCase(unittest.TestCase):
         self.assertEqual(3, predictionUser1Item1)
 
     def test_retorna_uma_predicao_baseada_no_item(self):
-        # print( rs.getItemBasedPrediction(args.usuario, args.item) )
-        pass
+        """
+        Dado: uma sistema de recomendações com 5 usuários
+        Sendo o primeiro deles com avaliação para os itens 1..4 = 3
+        E os demais usuários com avaliações para os itens 1..5 = 3
+        Quando: eu pedir a predição da avaliação do item 5 para o usuário 1
+        Então: o sistema deve me retornar a predição baseada no item = 3
+        """
+        rs = RecommenderSystemBuilder() \
+            .aRecommenderSystem() \
+            .withRatings([
+                [3, 3, 3, 3, '?'],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3]
+            ]) \
+            .build()
+
+        predictionUser1Item1 = rs.getItemBasedPrediction(1, 5)
+
+        self.assertEqual(3, predictionUser1Item1)

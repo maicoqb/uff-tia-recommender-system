@@ -13,7 +13,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         Então: deve me retornar o valor n
         """
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingNWithValue(5, 1) \
+                .withRatingNWithValue(5, 1) \
                 .build()
         
         prediction = ubp.getPrediction(1,5)
@@ -21,7 +21,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         self.assertAlmostEqual(1, prediction)
 
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingNWithValue(5, 2) \
+                .withRatingNWithValue(5, 2) \
                 .build()
         
         prediction = ubp.getPrediction(1,5)
@@ -29,7 +29,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         self.assertAlmostEqual(2, prediction)
 
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingNWithValue(5, 10) \
+                .withRatingNWithValue(5, 10) \
                 .build()
         
         prediction = ubp.getPrediction(1,5)
@@ -45,7 +45,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         Então: deve me retornar o valor n
         """
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingInMiddleWithValue(1) \
+                .withRatingInMiddleWithValue(1) \
                 .build()
         
         prediction = ubp.getPrediction(3,3)
@@ -53,7 +53,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         self.assertAlmostEqual(1, prediction)
 
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingInMiddleWithValue(2) \
+                .withRatingInMiddleWithValue(2) \
                 .build()
         
         prediction = ubp.getPrediction(3,3)
@@ -61,7 +61,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         self.assertAlmostEqual(2, prediction)
 
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingInMiddleWithValue(10) \
+                .withRatingInMiddleWithValue(10) \
                 .build()
         
         prediction = ubp.getPrediction(3,3)
@@ -78,7 +78,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         """
         n = 1
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingIn3And4(n) \
+                .withRatingIn3And4(n) \
                 .build()
         
         p1 = ubp.getPrediction(1, 3)
@@ -88,7 +88,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
 
         n = 12
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingIn3And4(n) \
+                .withRatingIn3And4(n) \
                 .build()
         
         p1 = ubp.getPrediction(1, 3)
@@ -99,7 +99,7 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         n = 20
         n = 20
         ubp = UserBasedPredictioneerBuilder() \
-                .withRattingIn3And4(n) \
+                .withRatingIn3And4(n) \
                 .build()
         
         p1 = ubp.getPrediction(1, 3)

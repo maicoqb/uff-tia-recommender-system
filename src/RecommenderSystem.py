@@ -4,6 +4,7 @@ from .Item import Item
 
 from .FileManager import FileManager
 from .UserBasedPredictioneer import UserBasedPredictioneer
+from .ItemBasedPredictioneer import ItemBasedPredictioneer
 
 class RecommenderSystem:
 
@@ -11,6 +12,7 @@ class RecommenderSystem:
         ':param FileManager fileManager'
         self.fileManager = fileManager
         self.userBasedPredictioneer = UserBasedPredictioneer(fileManager.getRows())
+        self.itemBasedPredictioneer = ItemBasedPredictioneer(fileManager.getRows())
         pass
     
     def getUser(self, userN):
@@ -37,5 +39,5 @@ class RecommenderSystem:
         return self.userBasedPredictioneer.getPrediction(userN, itemN)
     
     def getItemBasedPrediction(self, userN, itemN):
-        return 1
+        return self.itemBasedPredictioneer.getPrediction(userN, itemN)
     

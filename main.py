@@ -27,9 +27,8 @@ def main(args):
     ##      pred(r<sub>x,y</sub>) usando abordagem baseada em usuários (Seção 2.1.1)
     ##      pred(r<sub>x,y</sub>) usando abordagem baseada em itens (Seção 2.2.1)
     else:
-        print("Carregando informações para usuario " + str(args.usuario) + " e item " + str(args.item) )
         print( rs.getUserBasedPrediction(args.usuario, args.item) )
-        # print( rs.getItemBasedPrediction(args.usuario, args.item) )
+        print( rs.getItemBasedPrediction(args.usuario, args.item) )
     
 
 if __name__ == "__main__":
