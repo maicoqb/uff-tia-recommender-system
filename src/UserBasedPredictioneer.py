@@ -4,7 +4,7 @@ import src.PearsonCorrelation as pearson
 class UserBasedPredictioneer:
 
     def __init__(self, rows):
-        self.rows = rows
+        self.rows = self.__clearRows(rows)
         self.__rowsSize = len(rows)
         self.__colsSize = len(rows[0])
 
@@ -53,3 +53,12 @@ class UserBasedPredictioneer:
                 filteredRows[r] = _row
 
         return filteredRows
+
+    def __clearRows(self, rows):
+        for i, row in enumerate(rows):
+            for j, v in enumerate(row):
+                if v == '?': continue
+                else: row[j] = int(v)
+            rows[i] = row
+            
+        return rows

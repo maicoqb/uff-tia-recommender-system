@@ -11,7 +11,8 @@ def covariance(X, Y):
 
     C = 0
     for i, x in enumerate(X):
-        y = Y[i]
+        y = int(Y[i])
+        x = int(x)
         C += (x - mx)*(y - my)
 
     return C
@@ -20,7 +21,9 @@ def standardDeviation(A):
     ma = mean(A)
 
     sd = 0
-    for a in A: sd += math.pow(a - ma, 2)
+    for a in A:
+        a = int(a)
+        sd += math.pow(a - ma, 2)
 
     return sd
 

@@ -158,25 +158,25 @@ class RecommenderSystemTestCase(unittest.TestCase):
     def test_retorna_uma_predicao_baseada_no_usuario(self):
         """
         Dado: uma sistema de recomendações com 5 usuários
-        Sendo o primeiro deles com avaliação para os itens 1..4 = 1
-        E os demais usuários com avaliações para os itens 1..5 = 1
+        Sendo o primeiro deles com avaliação para os itens 1..4 = 3
+        E os demais usuários com avaliações para os itens 1..5 = 3
         Quando: eu pedir a predição da avaliação do item 5 para o usuário 1
-        Então: o sistema deve me retornar a predição baseada no usuário = 1
+        Então: o sistema deve me retornar a predição baseada no usuário = 3
         """
         rs = RecommenderSystemBuilder() \
                 .aRecommenderSystem() \
                 .withRatings([
-                    [1, 1, 1, 1, '?'],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1]
+                    [3, 3, 3, 3, '?'],
+                    [3, 3, 3, 3, 3],
+                    [3, 3, 3, 3, 3],
+                    [3, 3, 3, 3, 3],
+                    [3, 3, 3, 3, 3]
                 ]) \
                 .build()
         
         predictionUser1Item1 = rs.getUserBasedPrediction(1, 5)
         
-        self.assertAlmostEqual(1, predictionUser1Item1)
+        self.assertEqual(3, predictionUser1Item1)
     
     def test_retorna_uma_predicao_baseada_no_item(self):
         # print( rs.getItemBasedPrediction(args.usuario, args.item) )
