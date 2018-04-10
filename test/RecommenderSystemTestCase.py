@@ -2,6 +2,7 @@ import unittest
 
 from test.helper.RecommenderSystemBuilder import RecommenderSystemBuilder
 
+
 class RecommenderSystemTestCase(unittest.TestCase):
 
     def test_exibicao_de_lista_de_usuario(self):
@@ -12,10 +13,10 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: cada usuário deverá ter apenas 1 review
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with3Users() \
-                .with1ItemEach() \
-                .build()
+            .aRecommenderSystem() \
+            .with3Users() \
+            .with1ItemEach() \
+            .build()
 
         user1Items = rs.getUser(1).getReviewsLength()
         user2Items = rs.getUser(2).getReviewsLength()
@@ -33,10 +34,10 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: deve haver um usuário 5 com 3 itens
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with5Users() \
-                .with3ItemsEach() \
-                .build()
+            .aRecommenderSystem() \
+            .with5Users() \
+            .with3ItemsEach() \
+            .build()
 
         user5Items = rs.getUser(5).getReviewsLength()
 
@@ -50,14 +51,31 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: deve haver 3 reviews para este item
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with3Users() \
-                .with1ItemEach() \
-                .build()
-        
+            .aRecommenderSystem() \
+            .with3Users() \
+            .with1ItemEach() \
+            .build()
+
         item1users = rs.getItem(1).getReviewsLength()
 
         self.assertEqual(3, item1users)
+
+    def test_exibicao_de_lista_de_itens_quando_houverem_mais_de_um_item(self):
+        """
+        Dado: um sistema de recomendação com 6 usuários
+        E cada usuário com 6 itens
+        Quando: eu pegar a informação do item 6
+        Então: deve haver 6 reviews para este item
+        """
+        rs = RecommenderSystemBuilder() \
+            .aRecommenderSystem() \
+            .withUsers(6) \
+            .withItems(6) \
+            .build()
+
+        item6Users = rs.getItem(6).getReviewsLength()
+
+        self.assertEqual(6, item6Users)
 
     def test_verifica_se_ha_analises(self):
         """
@@ -67,16 +85,16 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: deve haver correlação para todos usuários e itens
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with3Users() \
-                .with3ItemsEach() \
-                .build()
-        
+            .aRecommenderSystem() \
+            .with3Users() \
+            .with3ItemsEach() \
+            .build()
+
         hasRatings = []
-        for user in range(0,3):
-            for item in range(0,3):
-                hasRatings.append( rs.hasRating(user, item) )
-        
+        for user in range(0, 3):
+            for item in range(0, 3):
+                hasRatings.append(rs.hasRating(user, item))
+
         for hasRating in hasRatings:
             self.assertTrue(hasRating)
 
@@ -89,17 +107,17 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: não deve haver recomendação para estes casos
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with1User() \
-                .with1ItemEach() \
-                .build()
-        
+            .aRecommenderSystem() \
+            .with1User() \
+            .with1ItemEach() \
+            .build()
+
         hasRatingUsuario2 = rs.hasRating(2, 1)
         hasRatingItem2 = rs.hasRating(1, 2)
 
         self.assertFalse(hasRatingUsuario2)
         self.assertFalse(hasRatingItem2)
-    
+
     def test_verifica_se_ha_analises_quando_nao_houver(self):
         """
         Dado: um sistema de recomendações com 1 usuário
@@ -108,12 +126,12 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: não deve haver recomendação para este item
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with1User() \
-                .withOnlyItem1And3() \
-                .build()
-        
-        hasRatingItem2 = rs.hasRating(1,2)
+            .aRecommenderSystem() \
+            .with1User() \
+            .withOnlyItem1And3() \
+            .build()
+
+        hasRatingItem2 = rs.hasRating(1, 2)
 
         self.assertFalse(hasRatingItem2)
 
@@ -125,11 +143,11 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: deve me retornar 10 como avaliação
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with1User() \
-                .with1Item(rating=10) \
-                .build()
-        
+            .aRecommenderSystem() \
+            .with1User() \
+            .with1Item(rating=10) \
+            .build()
+
         ratingUser1Item1 = rs.getRating(1, 1)
 
         self.assertEqual(10, ratingUser1Item1)
@@ -142,11 +160,11 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: deve me retornar n*m como avaliação
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .with5Users() \
-                .with5ItemsNM() \
-                .build()
-        
+            .aRecommenderSystem() \
+            .with5Users() \
+            .with5ItemsNM() \
+            .build()
+
         ratingUser2Item1 = rs.getRating(2, 1)
         ratingUser3Item4 = rs.getRating(3, 4)
         ratingUser5Item5 = rs.getRating(5, 5)
@@ -154,7 +172,7 @@ class RecommenderSystemTestCase(unittest.TestCase):
         self.assertEqual(2*1, ratingUser2Item1)
         self.assertEqual(3*4, ratingUser3Item4)
         self.assertEqual(5*5, ratingUser5Item5)
-    
+
     def test_retorna_uma_predicao_baseada_no_usuario(self):
         """
         Dado: uma sistema de recomendações com 5 usuários
@@ -164,21 +182,20 @@ class RecommenderSystemTestCase(unittest.TestCase):
         Então: o sistema deve me retornar a predição baseada no usuário = 3
         """
         rs = RecommenderSystemBuilder() \
-                .aRecommenderSystem() \
-                .withRatings([
-                    [3, 3, 3, 3, '?'],
-                    [3, 3, 3, 3, 3],
-                    [3, 3, 3, 3, 3],
-                    [3, 3, 3, 3, 3],
-                    [3, 3, 3, 3, 3]
-                ]) \
-                .build()
-        
+            .aRecommenderSystem() \
+            .withRatings([
+                [3, 3, 3, 3, '?'],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3],
+                [3, 3, 3, 3, 3]
+            ]) \
+            .build()
+
         predictionUser1Item1 = rs.getUserBasedPrediction(1, 5)
-        
+
         self.assertEqual(3, predictionUser1Item1)
-    
+
     def test_retorna_uma_predicao_baseada_no_item(self):
         # print( rs.getItemBasedPrediction(args.usuario, args.item) )
         pass
-    

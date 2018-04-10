@@ -15,16 +15,21 @@ class RecommenderSystemBuilder:
             self.fmb.withItemsListForUser(idx+1, items)
         return self
 
-    def with1User(self):
-        self.fmb.withUsers(1)
+    def withUsers(self, n):
+        self.fmb.withUsers(n)
         return self
 
+    def with1User(self):
+        return self.withUsers(1)
+
     def with3Users(self):
-        self.fmb.withUsers(3)
-        return self
+        return self.withUsers(3)
     
     def with5Users(self):
-        self.fmb.withUsers(5)
+        return self.withUsers(5)
+
+    def withItems(self, n):
+        self.fmb.withItems(n)
         return self
 
     def with1Item(self, rating=1):
