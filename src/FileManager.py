@@ -30,4 +30,6 @@ class FileManager:
     def getRow(self, rowN):
         return self.rows[rowN-1]
     
+    def getRows(self):
+        return self.rows
             

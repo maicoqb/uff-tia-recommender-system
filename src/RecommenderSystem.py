@@ -3,14 +3,14 @@ from .User import User
 from .Item import Item
 
 from .FileManager import FileManager
+from .UserBasedPredictioneer import UserBasedPredictioneer
 
 class RecommenderSystem:
 
     def __init__(self, fileManager):
-        """
-        :param FileManager fileManager: 
-        """
+        ':param FileManager fileManager'
         self.fileManager = fileManager
+        self.userBasedPredictioneer = UserBasedPredictioneer(fileManager.getRows())
         pass
     
     def getUser(self, userN):
@@ -34,7 +34,7 @@ class RecommenderSystem:
         return user.getReview(itemN)
     
     def getUserBasedPrediction(self, userN, itemN):
-        return 1
+        return self.userBasedPredictioneer.getPrediction(userN, itemN)
     
     def getItemBasedPrediction(self, userN, itemN):
         return 1

@@ -10,6 +10,11 @@ class RecommenderSystemBuilder:
     def aRecommenderSystem(self):
         return RecommenderSystemBuilder()
 
+    def withRatings(self, ratings):
+        for idx, items in enumerate(ratings):
+            self.fmb.withItemsListForUser(idx+1, items)
+        return self
+
     def with1User(self):
         self.fmb.withUsers(1)
         return self
@@ -40,12 +45,13 @@ class RecommenderSystemBuilder:
     
     def with5ItemsNM(self):
         itemListNM = lambda n: [n*m for m in [1,2,3,4,5]]
-        self.fmb.withItemsListForN(1, itemListNM(1))
-        self.fmb.withItemsListForN(2, itemListNM(2))
-        self.fmb.withItemsListForN(3, itemListNM(3))
-        self.fmb.withItemsListForN(4, itemListNM(4))
-        self.fmb.withItemsListForN(5, itemListNM(5))
-        return self
+        return self.withRatings([
+            itemListNM(1),
+            itemListNM(2),
+            itemListNM(3),
+            itemListNM(4),
+            itemListNM(5)
+        ])
     
     def build(self):
         fileManager = self.fmb.build()

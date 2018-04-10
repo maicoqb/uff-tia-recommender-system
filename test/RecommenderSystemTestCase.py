@@ -136,7 +136,7 @@ class RecommenderSystemTestCase(unittest.TestCase):
 
     def test_pega_o_resultado_de_uma_analise_com_varios_usuarios_e_itens(self):
         """
-        Dado: um sistema de recomendação com n=15 usuário
+        Dado: um sistema de recomendação com n=5 usuário
         E estes usuários cada qual com m=5 avaliações de itens
         Quando: eu pedir a avaliação de um item
         Então: deve me retornar n*m como avaliação
@@ -154,4 +154,31 @@ class RecommenderSystemTestCase(unittest.TestCase):
         self.assertEqual(2*1, ratingUser2Item1)
         self.assertEqual(3*4, ratingUser3Item4)
         self.assertEqual(5*5, ratingUser5Item5)
+    
+    def test_retorna_uma_predicao_baseada_no_usuario(self):
+        """
+        Dado: uma sistema de recomendações com 5 usuários
+        Sendo o primeiro deles com avaliação para os itens 1..4 = 1
+        E os demais usuários com avaliações para os itens 1..5 = 1
+        Quando: eu pedir a predição da avaliação do item 5 para o usuário 1
+        Então: o sistema deve me retornar a predição baseada no usuário = 1
+        """
+        rs = RecommenderSystemBuilder() \
+                .aRecommenderSystem() \
+                .withRatings([
+                    [1, 1, 1, 1, '?'],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1]
+                ]) \
+                .build()
+        
+        predictionUser1Item1 = rs.getUserBasedPrediction(1, 5)
+        
+        self.assertAlmostEqual(1, predictionUser1Item1)
+    
+    def test_retorna_uma_predicao_baseada_no_item(self):
+        # print( rs.getItemBasedPrediction(args.usuario, args.item) )
+        pass
     

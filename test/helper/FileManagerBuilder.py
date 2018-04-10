@@ -7,7 +7,7 @@ class FileManagerBuilder:
     filename = 'test_arquivo.csv'
     
     def __init__(self):
-        self.users = 1
+        self.users = []
         self.items = []
         self.itemsN = []
 
@@ -15,7 +15,7 @@ class FileManagerBuilder:
         return FileManagerBuilder()
     
     def withUsers(self, amount):
-        self.users = amount
+        self.users = [[] for _ in range(0, amount)]
         return self
     
     def withItems(self, amount):
@@ -25,19 +25,17 @@ class FileManagerBuilder:
         self.items = itemList
         return self
     
-    def withItemsListForN(self, n, itemList):
-        while n > len(self.itemsN): self.itemsN.append([])
-        self.itemsN[n-1] = itemList
+    def withItemsListForUser(self, user, itemList):
+        while user > len(self.users): self.users.append([])
+        self.users[user-1] = itemList
         return self
 
     def __createFile(self):
         with open(self.filename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
-            for i in range(0, self.users):
-                items = self.items
-                if self.itemsN != [] and self.itemsN[i] != []:
-                    items = self.itemsN[i]
-
+            for items in self.users:
+                if items == []:
+                    items = self.items
                 writer.writerow(items)
 
     def build(self):
