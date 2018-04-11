@@ -44,26 +44,36 @@ def media(vetor):
             vetor=np.delete(vetor, idx);
     return np.mean(vetor.astype(int));
 
-
+#FUNCAO TEST PARA AVALIAR O RESULTADO DE CADA PREDICAO
 def test():
     for i in range(1,30):
         print(i);
-        #main(i,8);
+        resp = main(i,8);
+        if(resp==-1):
+            print("============================================>ERROR")
+            break
+    
+#CHAMAR ESSA FUNCAO PARA ENTRADA COM VALORES DO USUARIO    
+def user():
+    #Recolhe input do usuario
+    usuarioX = input("Digite 'Usuário X': ")
+    itemY = input("Digite 'Item Y': ")
+    main(usuarioX,itemY)
 
-def main():
+def main(x,y):
     
     #Lê o arquivo csv usando a biblioteca Pandas    
     data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1);
     
-    #Recolhe input do usuario
-    usuarioX = input("Digite 'Usuário X': ")
-    itemY = input("Digite 'Item Y': ")
+    
     print("\n")
     
-    
+    usuarioX=x;
+    itemY=y;
     
     usuarioX=str(int(usuarioX)-1)
     itemY=str(int(itemY)-1)
+    
     
     linhaUsuario = []
     colunaItem = []
@@ -136,12 +146,13 @@ def main():
             if(i!=int(usuarioX) and linhaUsuarioAtual[int(j)]!="?"):
                 
                 #Formula matematica da predicao (slide 38)
-                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);                
-                somatorioDenominador += pearsonTemp;                
-                rbp = int(linhaUsuarioAtual[int(j)]);                
-                mediaUsuarioAtual = media(linhaUsuarioAtual);                
-                subtractvalue = rbp - mediaUsuarioAtual;                            
-                somatorioNumerador += pearsonTemp * subtractvalue;        
+                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);
+                if(pearsonTemp > float(0.4)):               
+                    somatorioDenominador += pearsonTemp;                
+                    rbp = int(linhaUsuarioAtual[int(j)]);                
+                    mediaUsuarioAtual = media(linhaUsuarioAtual);                
+                    subtractvalue = rbp - mediaUsuarioAtual;                            
+                    somatorioNumerador += pearsonTemp * subtractvalue;        
             
         
         razao = somatorioNumerador / somatorioDenominador    
@@ -155,7 +166,9 @@ def main():
         predict = media(linhaUsuario.values) + razao
         
         print("     -->Predicao do Item("+str(j+1)+") para o Usuario("+str(int(usuarioX)+1)+"): " +str(predict));
-        
+        if(predict>5 or predict<0):
+            return -1
+    return 0
         
             
         
