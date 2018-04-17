@@ -7,42 +7,83 @@ Created on Sun Apr  8 14:23:57 2018
 from scipy.stats.mstats import pearsonr
 import numpy as np
 import pandas as pd
-#import math 
+import math 
 
-def correlacaoPearson(usuarioA,usuarioB):
+def correlacaoPearson(vetA,vetB):
+    usuarioA = vetA;
+    usuarioB = vetB;
     #-----------------------------DEBUG----------------------------------
+    #print("Pearson init")
+    #print(str(len(usuarioA)))
     #print(usuarioA)
+    #print(str(len(usuarioB)))
     #print(usuarioB)
     #-----------------------------DEBUG----------------------------------
+    
+    indexRemove = [];
+    for i in range(len(usuarioA)):
+        if(usuarioA[i]=="?"):
+            indexRemove.append(i);
+             
+    for j in range(len(usuarioB)):
+        if(usuarioB[j]=="?"):
+             indexRemove.append(j);
+        
 
+    indexRemove.sort(reverse=True);
+    
     #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
     #ou seja, remover do vetor de comparacao os "?"    
-    for idx,i in enumerate(usuarioA):
-            if(i=="?"):                    
-                usuarioA=np.delete(usuarioA, idx);
-                usuarioB=np.delete(usuarioB, idx);
-    for idx,j in enumerate(usuarioB):
-            if(j=="?"):
-                usuarioA=np.delete(usuarioA, idx);
-                usuarioB=np.delete(usuarioB, idx);
+
+    for k in indexRemove:
+        usuarioA=np.delete(usuarioA, k);
+        usuarioB=np.delete(usuarioB, k);
+   
+    #-----------------------------DEBUG----------------------------------
+    #print("Pearson after")
+    #print(usuarioA);
+    #print(usuarioB);
+    #-----------------------------DEBUG----------------------------------
     
     usuarioA = usuarioA.astype(int)
     usuarioB = usuarioB.astype(int)
-    
-    #-----------------------------DEBUG----------------------------------
-    #print(usuarioA)
-    #print(usuarioB)
-    #-----------------------------DEBUG----------------------------------
-    
+   
     #chama a biblioteca PearsonR passando 2 vetores
     return pearsonr(usuarioA,usuarioB)[0];
 
+
+def similaridadeItem(itemA,itemB):
+    soma=0; 
+    for idx,i in enumerate(itemA):
+         soma += itemA[idx]*itemB[idx];
+    
+    
+    moduloA = aux(itemA);
+    
+    print("ModuloA");
+    print(moduloA);
+    moduloB = aux(itemB);
+    print("ModuloB");
+    print(moduloB);
+    
+    resp = soma / (moduloA * moduloB);
+    
+    return resp;
+
+    
+def aux(vet):
+    soma =0;
+    for idx,i in enumerate(vet):
+        soma+= math.pow(vet[idx],2);    
+    return math.sqrt(soma);
+        
 
 def media(vetor):
     for idx,i in enumerate(vetor):
         if(i=="?"):                    
             vetor=np.delete(vetor, idx);
     return np.mean(vetor.astype(int));
+
 
 #FUNCAO TEST PARA AVALIAR O RESULTADO DE CADA PREDICAO
 def test():
@@ -132,9 +173,10 @@ def main(x,y):
     print("--> Itens nao avaliados: "+str(np.array(naoAvaliados)+1))
     
     
-    #Para cada item não avaliado pelo Usuario fazer a Predicao "User-Based"
+    #Para cada item não avaliado pelo Usuario
     for j in naoAvaliados:
         
+        #Predicao "User-Based"
         somatorioNumerador = 0
         somatorioDenominador = 0
         #Varrer todos os usuarios
@@ -167,7 +209,8 @@ def main(x,y):
         
         print("     -->Predicao do Item("+str(j+1)+") para o Usuario("+str(int(usuarioX)+1)+"): " +str(predict));
         if(predict>5 or predict<0):
-            return -1
+            return -1        
+        
     return 0
         
             
