@@ -1,5 +1,5 @@
 
-import src.PearsonCorrelation as pearson
+import src.library as pearson
 
 class UserBasedPredictioneer:
 

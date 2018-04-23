@@ -5,7 +5,7 @@ from src.RecommenderSystem import RecommenderSystem
 class RecommenderSystemBuilder:
 
     def __init__(self):
-        self.fmb = FileManagerBuilder().aFileManager()
+        self.fmb = FileManagerBuilder.aFileManager()
 
     def aRecommenderSystem(self):
         return RecommenderSystemBuilder()

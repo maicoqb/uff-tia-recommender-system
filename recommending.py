@@ -4,10 +4,17 @@ Created on Sun Apr  8 14:23:57 2018
 
 @author: Eduar
 """
-from scipy.stats.mstats import pearsonr
-import numpy as np
-import pandas as pd
+try:
+    from scipy.stats.mstats import pearsonr
+    import numpy as np
+    import pandas as pd
+except:
+    from src.library import pearsonrFake as pearsonr
+    from src.library import npFake as np
+    from src.library import pdFake as pd
+
 import math 
+import argparse
 
 def correlacaoPearson(vetA,vetB):
     usuarioA = vetA
@@ -49,7 +56,7 @@ def correlacaoPearson(vetA,vetB):
     usuarioB = usuarioB.astype(int)
    
     #chama a biblioteca PearsonR passando 2 vetores
-    return pearsonr(usuarioA,usuarioB)[0];
+    return pearsonr(usuarioA,usuarioB)[0]
 
 
 def similaridadeItem(itemA,itemB):
@@ -103,8 +110,7 @@ def user():
 def main(x,y):
     
     #Lê o arquivo csv usando a biblioteca Pandas    
-    data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1);
-    
+    data = pd.read_csv("Dataset-grad.csv", header=0, sep=";").drop("Users/Items",axis=1)
     
     print("\n")
     
@@ -113,7 +119,6 @@ def main(x,y):
     
     usuarioX=str(int(usuarioX)-1)
     itemY=str(int(itemY)-1)
-    
     
     linhaUsuario = []
     colunaItem = []
@@ -212,12 +217,15 @@ def main(x,y):
         
     return 0
         
-            
-        
-        
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('usuario', metavar="USUARIO", type=int, nargs='?', default=None,
+                        help="Indice do usuário que se deseja a avaliação do ITEM")
+    parser.add_argument('item',    metavar="ITEM",    type=int, nargs='?', default=None,
+                        help="Indice do item que se deseja a avaliação do USUARIO")
+    args = parser.parse_args()
     
-
-            
-        
-    
-    
+    if args.usuario == None and args.item == None:
+        user()
+    else:
+        main(args.usuario, args.item)

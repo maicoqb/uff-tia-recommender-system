@@ -2,7 +2,6 @@ import unittest
 
 from test.helper.RecommenderSystemBuilder import RecommenderSystemBuilder
 
-
 class RecommenderSystemTestCase(unittest.TestCase):
 
     def test_exibicao_de_lista_de_usuario(self):
