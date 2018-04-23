@@ -10,8 +10,8 @@ import pandas as pd
 import math 
 
 def correlacaoPearson(vetA,vetB):
-    usuarioA = vetA;
-    usuarioB = vetB;
+    usuarioA = vetA
+    usuarioB = vetB
     #-----------------------------DEBUG----------------------------------
     #print("Pearson init")
     #print(str(len(usuarioA)))
@@ -20,29 +20,29 @@ def correlacaoPearson(vetA,vetB):
     #print(usuarioB)
     #-----------------------------DEBUG----------------------------------
     
-    indexRemove = [];
+    indexRemove = []
     for i in range(len(usuarioA)):
         if(usuarioA[i]=="?"):
-            indexRemove.append(i);
+            indexRemove.append(i)
              
     for j in range(len(usuarioB)):
         if(usuarioB[j]=="?"):
-             indexRemove.append(j);
+             indexRemove.append(j)
         
 
-    indexRemove.sort(reverse=True);
+    indexRemove.sort(reverse=True)
     
     #Para fazer a correlaçao de Pearson é necessario comparar os itens avaliados pelos dois usuarios
     #ou seja, remover do vetor de comparacao os "?"    
 
     for k in indexRemove:
-        usuarioA=np.delete(usuarioA, k);
-        usuarioB=np.delete(usuarioB, k);
+        usuarioA=np.delete(usuarioA, k)
+        usuarioB=np.delete(usuarioB, k)
    
     #-----------------------------DEBUG----------------------------------
     #print("Pearson after")
-    #print(usuarioA);
-    #print(usuarioB);
+    #print(usuarioA)
+    #print(usuarioB)
     #-----------------------------DEBUG----------------------------------
     
     usuarioA = usuarioA.astype(int)
@@ -53,43 +53,42 @@ def correlacaoPearson(vetA,vetB):
 
 
 def similaridadeItem(itemA,itemB):
-    soma=0; 
+    soma=0 
     for idx,i in enumerate(itemA):
-         soma += itemA[idx]*itemB[idx];
+         soma += itemA[idx]*itemB[idx]
     
+    moduloA = aux(itemA)
     
-    moduloA = aux(itemA);
+    print("ModuloA")
+    print(moduloA)
+    moduloB = aux(itemB)
+    print("ModuloB")
+    print(moduloB)
     
-    print("ModuloA");
-    print(moduloA);
-    moduloB = aux(itemB);
-    print("ModuloB");
-    print(moduloB);
+    resp = soma / (moduloA * moduloB)
     
-    resp = soma / (moduloA * moduloB);
+    return resp
     
-    return resp;
 
-    
 def aux(vet):
-    soma =0;
+    soma =0
     for idx,i in enumerate(vet):
-        soma+= math.pow(vet[idx],2);    
-    return math.sqrt(soma);
+        soma+= math.pow(vet[idx],2)    
+    return math.sqrt(soma)
         
 
 def media(vetor):
     for idx,i in enumerate(vetor):
         if(i=="?"):                    
-            vetor=np.delete(vetor, idx);
-    return np.mean(vetor.astype(int));
+            vetor=np.delete(vetor, idx)
+    return np.mean(vetor.astype(int))
 
 
 #FUNCAO TEST PARA AVALIAR O RESULTADO DE CADA PREDICAO
 def test():
     for i in range(1,30):
-        print(i);
-        resp = main(i,8);
+        print(i)
+        resp = main(i,8)
         if(resp==-1):
             print("============================================>ERROR")
             break
@@ -109,8 +108,8 @@ def main(x,y):
     
     print("\n")
     
-    usuarioX=x;
-    itemY=y;
+    usuarioX=x
+    itemY=y
     
     usuarioX=str(int(usuarioX)-1)
     itemY=str(int(itemY)-1)
@@ -131,10 +130,10 @@ def main(x,y):
     #-----------------------------DEBUG----------------------------------
     
     #O número de itens avaliados pelo Usuário X
-    totalItens = 0;
+    totalItens = 0
     for i in linhaUsuario:
         if(i!="?"):
-            totalItens += 1;
+            totalItens += 1
     print("--> Total itens avaliados por Usuario("+str(int(usuarioX)+1)+"): "+str(totalItens))
     print("\n")
     
@@ -146,26 +145,26 @@ def main(x,y):
     #-----------------------------DEBUG----------------------------------
     
     #O número de usuários que avaliaram o Item Y
-    totalUsuarios = 0;
+    totalUsuarios = 0
     for j in colunaItem:
         if(j!="?"):
-            totalUsuarios += 1;
+            totalUsuarios += 1
     print("--> Total usuarios que avaliaram o Item("+str(int(itemY)+1)+"): "+str(totalUsuarios))
     print("\n")
     
     
     #Se o Usuário X avaliou o Item Y
     if(linhaUsuario[int(itemY)]=="?"):
-        print("--> O usuário NÃO avaliou o item("+str(int(itemY)+1)+")");
+        print("--> O usuário NÃO avaliou o item("+str(int(itemY)+1)+")")
     else:
-        print("--> O usuário avaliou o item("+str(int(itemY)+1)+")");
+        print("--> O usuário avaliou o item("+str(int(itemY)+1)+")")
 
     
     #Para cada item nao avaliado dar uma predicao baseada nos Usuarios
     naoAvaliados = []    
     for idx,i in enumerate(linhaUsuario):
         if(i=="?"):
-            naoAvaliados.append(idx);
+            naoAvaliados.append(idx)
             
   
     # Soma 1 aos indices no print pois indice 0 == item 1
@@ -188,26 +187,26 @@ def main(x,y):
             if(i!=int(usuarioX) and linhaUsuarioAtual[int(j)]!="?"):
                 
                 #Formula matematica da predicao (slide 38)
-                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values);
+                pearsonTemp = correlacaoPearson(data.iloc[int(usuarioX)].values,data.iloc[i].values)
                 if(pearsonTemp > float(0.4)):               
-                    somatorioDenominador += pearsonTemp;                
-                    rbp = int(linhaUsuarioAtual[int(j)]);                
-                    mediaUsuarioAtual = media(linhaUsuarioAtual);                
-                    subtractvalue = rbp - mediaUsuarioAtual;                            
-                    somatorioNumerador += pearsonTemp * subtractvalue;        
+                    somatorioDenominador += pearsonTemp                
+                    rbp = int(linhaUsuarioAtual[int(j)])                
+                    mediaUsuarioAtual = media(linhaUsuarioAtual)                
+                    subtractvalue = rbp - mediaUsuarioAtual                            
+                    somatorioNumerador += pearsonTemp * subtractvalue        
             
         
         razao = somatorioNumerador / somatorioDenominador    
         
         #-----------------------------DEBUG----------------------------------
-        #print(somatorioNumerador);
-        #print(somatorioDenominador);
+        #print(somatorioNumerador)
+        #print(somatorioDenominador)
         #print(media(linhaUsuario.values))
         #-----------------------------DEBUG----------------------------------
         
         predict = media(linhaUsuario.values) + razao
         
-        print("     -->Predicao do Item("+str(j+1)+") para o Usuario("+str(int(usuarioX)+1)+"): " +str(predict));
+        print("     -->Predicao do Item("+str(j+1)+") para o Usuario("+str(int(usuarioX)+1)+"): " +str(predict))
         if(predict>5 or predict<0):
             return -1        
         
