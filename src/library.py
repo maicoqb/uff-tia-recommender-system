@@ -48,7 +48,7 @@ class npFake:
         newArr = []
         for (i, v) in enumerate(arr):
             if(i!=idx): newArr.append(v)
-        return newArr
+        return npFake.array(newArr)
     
     @staticmethod
     def mean(arr):
@@ -58,19 +58,30 @@ class npFake:
     def array(arr):
         return npFakeArrayAcessor(arr)
 
-class npFakeArrayAcessor:
+class npFakeArrayAcessor(UserList):
 
-    def __init__(self, arr):
-        self.arr = arr
-    
-    def __radd__(self, other):
-        return self.__add__(other)
+    def __init__(self, initlist):
+        super().__init__(initlist)
+        self.values = self
     
     def __add__(self, other):
-        for (i,v) in enumerate(self.arr):
-            self.arr[i] = int(v)+other
-        return self.arr
+        if isinstance(other, int):
+            new_data = []
+            for val in self.data:
+                new_data.append(val + other)
+                
+            return self.__class__(list(new_data))
+        return super().__add__(other)
 
+    __radd__ = __add__
+
+    def astype(self, _type):
+        new_data = []
+        for val in self.data:
+            new_data.append(_type(val))
+
+        return self.__class__(list(new_data))
+    
 class pdFake:
 
     @staticmethod
@@ -125,14 +136,8 @@ class pdFakeIlocAcessor:
             arr = self.fileManager.getRow(key+1)
         elif isinstance(key[1], int):
             arr = self.fileManager.getColumn(key[1]+1)
-        return pdFakeIlocItemAcessor(arr)
+        return npFake.array(arr)
 
-class pdFakeIlocItemAcessor(UserList):
-    
-    def __init__(self, data):
-        self.data = data
-        self.values = data
-    
 
     
 

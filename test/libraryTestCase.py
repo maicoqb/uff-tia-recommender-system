@@ -34,6 +34,19 @@ class libraryTestCase(unittest.TestCase):
         self.assertListEqual(pd.iloc[:,0].values, ["val1_1","val2_1"])
         self.assertListEqual(pd.iloc[:,1].values, ["val1_2","val2_2"])
 
-        
+    def test_npFake_array_sum(self):
+        arr = library.npFake.array([1, 2, 3])
 
+        arrSum = arr + 1
+        self.assertSequenceEqual(arrSum, [2, 3, 4])
 
+        arrSum = 1 + arr
+        self.assertSequenceEqual(arrSum, [2, 3, 4])
+
+    def test_npFake_array_astype(self):
+        arr = library.npFake.array(["1", "2", "3"])
+
+        arrCast = arr.astype(int)
+        self.assertSequenceEqual(arrCast, [1, 2, 3])
+
+    
