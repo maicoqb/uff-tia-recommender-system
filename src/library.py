@@ -41,13 +41,10 @@ def pearsonCorrelation(X, Y):
 def pearsonrFake(X, Y):
     return [pearsonCorrelation(X,Y)]
 
-class npFake:
-
+class ArrayFunctions:
     @staticmethod
     def delete(arr, idx):
-        newArr = []
-        for (i, v) in enumerate(arr):
-            if(i!=idx): newArr.append(v)
+        newArr = [value for (i, value) in enumerate(arr) if i != idx]
         return npFake.array(newArr)
     
     @staticmethod
@@ -56,9 +53,11 @@ class npFake:
     
     @staticmethod
     def array(arr):
-        return npFakeArrayAcessor(arr)
+        return UserArray(arr)
 
-class npFakeArrayAcessor(UserList):
+npFake = ArrayFunctions
+
+class UserArray(UserList):
 
     def __init__(self, initlist):
         super().__init__(initlist)

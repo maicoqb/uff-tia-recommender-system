@@ -1,5 +1,5 @@
-
-import src.library as pearson
+from collections import namedtuple
+import src.library as library
 
 class UserBasedPredictioneer:
 
@@ -9,60 +9,44 @@ class UserBasedPredictioneer:
         self.__colsSize = len(rows[0])
 
     def getPrediction(self, n, m):
-        filteredRows = self.getFilteredRows(m)
-        userRow = filteredRows[n-1]
+        userRow = self.rows[n-1]
+        othersUsers = self.getUsersWhoHaveThisItem(m)
 
-        ma = pearson.mean(userRow)
+        othersUsers = library.ArrayFunctions.delete(othersUsers, n-1)
+
         simDevSum = 0
         simSum = 0
 
-        for b, row in enumerate(filteredRows):
-            if n-1 == b or row == None:
-                continue
-            else:
-                if self.rows[b][m-1] == '?': continue
-                similarity = pearson.pearsonCorrelation(userRow, row)
-                devb = (self.rows[b][m-1] - pearson.mean(self.__filter(self.rows[b])))
+        for row in othersUsers:
+            filteredRows = self.filterSideBySide(userRow, row)
+            similarity = library.pearsonCorrelation(filteredRows.first, filteredRows.second)
+            if(similarity > float(0.4)):
+                devb = (row[m-1] - library.mean(self.filter(row)))
                 simDevSum += (similarity * devb)
                 simSum += similarity
 
         simDevDiff = 0 if simSum == 0 else (simDevSum / simSum)
 
+        ma = library.mean(self.filter(userRow))
         return (ma + simDevDiff)
 
-    def __filter(self, row):
-        _row = []
-        for i in row:
-            if i == '?': continue
-            _row.append(i)
-        return _row
-
-    def getFilteredRows(self, m):
+    def filter(self, row):
+        return [r for r in row if r != '?']
+    
+    def filterSideBySide(self, first, second):
+        FilteredRows = namedtuple('FilteredRows', ['first', 'second'])
+        filteredRows = FilteredRows(first=[], second=[])
         
-        filteredRows = []
-        idxToRemove = []
-
-        for row in self.rows:
-            _row = []
-            for index, item in enumerate(row):
-                if m-1 == index:
-                    continue
-                else:
-                    if item == '?': idxToRemove.append(len(_row))
-                    _row.append(item)
-            filteredRows.append(_row)
-        
-        for idx in idxToRemove:
-            for r, row in enumerate(filteredRows):
-                _row = []
-                for i, item in enumerate(row):
-                    if i == idx or item == '?': continue
-                    _row.append(item)
-                if len(_row) == 0: 
-                    _row = None
-                filteredRows[r] = _row
+        for (idx, fval) in enumerate(first):
+            sval = second[idx]
+            if '?' != fval and '?' != sval:
+                filteredRows.first.append(fval)
+                filteredRows.second.append(sval)
 
         return filteredRows
+
+    def getUsersWhoHaveThisItem(self, m):
+        return [row for row in self.rows if row[m-1] != '?']
 
     def __clearRows(self, rows):
         for i, row in enumerate(rows):

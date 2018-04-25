@@ -107,44 +107,40 @@ class UserBasedPredictioneerTestCase(unittest.TestCase):
         self.assertAlmostEqual(n, p1)
         self.assertAlmostEqual(n, p2)
 
-    def test_caso_dataset(self):
-        
+    def test_filtered_rows(self):
         ubp = UserBasedPredictioneerBuilder() \
                 .withRatings([
-                        [2,3,3,3,4,5,3,'?',4,5],
-                        [3,3,5,5,5,3,5,1,'?',4],
-                        [1,2,2,3,4,3,3,2,5,'?'],
-                        [3,3,2,2,4,3,'?',4,1,1],
-                        [5,4,4,3,3,3,4,5,'?',3],
-                        [3,4,2,3,3,'?',2,5,4,3],
-                        [2,3,4,4,3,4,3,5,'?',3],
-                        [1,2,2,5,3,4,5,3,3,'?'],
-                        [1,5,3,5,3,4,'?',5,4,3],
-                        [4,4,4,3,2,3,5,2,3,'?'],
-                        [2,3,5,3,3,5,5,1,5,'?'],
-                        [3,4,3,5,4,5,5,4,2,3],
-                        [4,2,2,5,3,3,'?',3,5,3],
-                        [5,5,1,1,5,1,5,4,3,5],
-                        [3,3,2,1,4,'?',5,5,2,4],
-                        [5,3,5,'?',4,4,4,3,2,3],
-                        [3,2,3,1,3,4,'?',3,3,1],
-                        ['?',4,5,3,4,2,1,4,4,4],
-                        [1,3,3,2,4,3,2,'?',3,4],
-                        [4,2,3,2,'?',3,2,3,2,1],
-                        [3,5,4,3,3,4,4,'?',3,3],
-                        [3,'?',2,1,4,3,3,4,2,3],
-                        [2,1,2,3,4,1,'?',2,4,1],
-                        [5,4,4,'?',3,4,5,3,4,2],
-                        [3,4,3,5,'?',2,1,4,5,3],
-                        [5,4,3,2,3,4,4,'?',3,1],
-                        [3,'?',5,4,4,5,3,3,3,2],
-                        [3,4,4,2,'?',5,3,4,5,3],
-                        [2,3,4,'?',3,1,2,3,4,3],
-                        [5,3,2,4,4,5,3,3,'?',4]
+                        [1,1,1,'?',1],
+                        [1,1,1,1,1],
+                        [1,1,1,1,1]
                 ]) \
                 .build()
         
+        filteredRows = ubp.getUsersWhoHaveThisItem(4)
+
+        self.assertEqual(len(filteredRows), 2)
+        self.assertListEqual(filteredRows, [
+                [1,1,1,1,1],
+                [1,1,1,1,1]
+        ])
+
+    def test_filter_side_by_side(self):
+        ubp = UserBasedPredictioneerBuilder() \
+                .withAnyData() \
+                .build()
+
+        first = [1,2,3,4,5,'?',7,8,9,0]
+        second = [1,2,3,4,'?',6,7,8,9,0]
+
+        filteredRows = ubp.filterSideBySide(first, second)
+
+        self.assertSequenceEqual(filteredRows.first, [1,2,3,4,7,8,9,0])
+        self.assertSequenceEqual(filteredRows.second, [1,2,3,4,7,8,9,0])
+
+    def test_caso_dataset(self):
+        ubp = UserBasedPredictioneerBuilder() \
+                .withDefaultDataSet() \
+                .build()
+        
         p1 = ubp.getPrediction(1, 8)
-        self.assertAlmostEqual(3, p1, delta=.6)
-
-
+        self.assertAlmostEqual(2.48, p1, delta=.2)

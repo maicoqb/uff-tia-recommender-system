@@ -28,11 +28,11 @@ class libraryTestCase(unittest.TestCase):
 
         pd = library.pdFakeFile(fm)
 
-        self.assertListEqual(pd.iloc[0].values, ["val1_1","val1_2"])
-        self.assertListEqual(pd.iloc[1].values, ["val2_1","val2_2"])
+        self.assertSequenceEqual(pd.iloc[0].values, ["val1_1","val1_2"])
+        self.assertSequenceEqual(pd.iloc[1].values, ["val2_1","val2_2"])
 
-        self.assertListEqual(pd.iloc[:,0].values, ["val1_1","val2_1"])
-        self.assertListEqual(pd.iloc[:,1].values, ["val1_2","val2_2"])
+        self.assertSequenceEqual(pd.iloc[:,0].values, ["val1_1","val2_1"])
+        self.assertSequenceEqual(pd.iloc[:,1].values, ["val1_2","val2_2"])
 
     def test_npFake_array_sum(self):
         arr = library.npFake.array([1, 2, 3])
@@ -48,5 +48,11 @@ class libraryTestCase(unittest.TestCase):
 
         arrCast = arr.astype(int)
         self.assertSequenceEqual(arrCast, [1, 2, 3])
+    
+    def test_npFake_array_delete(self):
+        arr = [1,2,3,4]
+
+        arrDelete = library.npFake.delete(arr, 0)
+        self.assertSequenceEqual(arrDelete, [2,3,4])
 
     

@@ -9,6 +9,9 @@ class UserBasedPredictioneerBuilder():
     def aUserBasedPredictioneer(self):
         return UserBasedPredictioneerBuilder()
     
+    def withAnyData(self):
+        return self.with5Items().with5Users()
+
     def with5Users(self):
         self.rows = [[] for _ in range(0,5)]
         return self
@@ -31,7 +34,7 @@ class UserBasedPredictioneerBuilder():
     
     def build(self):
         return UserBasedPredictioneer(self.rows)
-
+    
     def withRatingNWithValue(self, n, value):
         return self.aUserBasedPredictioneer() \
                 .with5Users() \
@@ -56,4 +59,38 @@ class UserBasedPredictioneerBuilder():
                 .with5Items() \
                 .theUserNWithRatings(1, nRating) \
                 .theUsersInRangeWithRatings(range(2,6), oRating)
+        
+    def withDefaultDataSet(self):
+        return self.withRatings([
+                        [2,3,3,3,4,5,3,'?',4,5],
+                        [3,3,5,5,5,3,5,1,'?',4],
+                        [1,2,2,3,4,3,3,2,5,'?'],
+                        [3,3,2,2,4,3,'?',4,1,1],
+                        [5,4,4,3,3,3,4,5,'?',3],
+                        [3,4,2,3,3,'?',2,5,4,3],
+                        [2,3,4,4,3,4,3,5,'?',3],
+                        [1,2,2,5,3,4,5,3,3,'?'],
+                        [1,5,3,5,3,4,'?',5,4,3],
+                        [4,4,4,3,2,3,5,2,3,'?'],
+                        [2,3,5,3,3,5,5,1,5,'?'],
+                        [3,4,3,5,4,5,5,4,2,3],
+                        [4,2,2,5,3,3,'?',3,5,3],
+                        [5,5,1,1,5,1,5,4,3,5],
+                        [3,3,2,1,4,'?',5,5,2,4],
+                        [5,3,5,'?',4,4,4,3,2,3],
+                        [3,2,3,1,3,4,'?',3,3,1],
+                        ['?',4,5,3,4,2,1,4,4,4],
+                        [1,3,3,2,4,3,2,'?',3,4],
+                        [4,2,3,2,'?',3,2,3,2,1],
+                        [3,5,4,3,3,4,4,'?',3,3],
+                        [3,'?',2,1,4,3,3,4,2,3],
+                        [2,1,2,3,4,1,'?',2,4,1],
+                        [5,4,4,'?',3,4,5,3,4,2],
+                        [3,4,3,5,'?',2,1,4,5,3],
+                        [5,4,3,2,3,4,4,'?',3,1],
+                        [3,'?',5,4,4,5,3,3,3,2],
+                        [3,4,4,2,'?',5,3,4,5,3],
+                        [2,3,4,'?',3,1,2,3,4,3],
+                        [5,3,2,4,4,5,3,3,'?',4]
+                ])
     
