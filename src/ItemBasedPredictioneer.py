@@ -26,7 +26,8 @@ class ItemBasedPredictioneer:
             if i == n-1:
                 continue
             item = self.__getItem(n, i+1)
-            similarities[i] = self.__calculateSimilarity(itemCol, item)
+            _similarity = self.__calculateSimilarity(itemCol, item)
+            similarities[i] = _similarity if _similarity > float(0.4) else None
 
         sumSimR = 0
         sumSim = 0
