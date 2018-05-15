@@ -18,5 +18,5 @@ int findAmmountOfRatesByUser(User *target, int nElements);
 int hasEvaluatedItem(User *target, int itemID);
 float calcUserAverageRate(User *target, int nElements);
 float calcPearsonCorrelation(User *a, User *b, int nElements);
-float predictRateByUser(User *a, int itemID, FILE *source);
+float predictRateByUser(User **array, int a_size, User *desired, int itemID, int nElements);
 float predictRateByItem();

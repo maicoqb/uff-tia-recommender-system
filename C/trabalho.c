@@ -38,7 +38,7 @@ User *generateUser(char *buffer, int nRatings)
 				break;
 				
 			default:
-				rateAux = buffer[pos];
+				sscanf(&buffer[pos], "%d", &rateAux);
 				newUser->rating[ratePos] = rateAux;
 				rateAux = NULL;
 				break;
@@ -59,6 +59,8 @@ User *generateUser(char *buffer, int nRatings)
 
 int getUserItemRate(User *target, int itemID)
 {
+	char d = '?';
+	printf("? = %d ou %c\n", d, d);
   if(target->rating[itemID] != '?' || target->rating[itemID] != -1)
   {
     return target->rating[itemID];
@@ -167,9 +169,43 @@ float calcPearsonCorrelation(User *a, User *b, int nElements)
   return pearson;
 }
 
-float predictRateByUser(User *a, int itemID, FILE *source)
+float predictRateByUser(User **array, int a_size, User *desired, int itemID, int nElements)
 {
-  return 0.0f;
+	float pred = -0.5f, demRes = 0, rateDiff = 0, numRes = 0, pearson = 0, des_average, cur_average;
+	
+	des_average = calcUserAverageRate(desired, nElements);
+	
+	//int counter[a_size];
+	for(int i=0; i<a_size; i++)
+	{
+		if(desired == array[i])
+		{
+			//pearson[i] = 2; // represets itself
+			continue;
+		}
+		else if(array[i]->rating[itemID] == -1)
+		{
+			//pearson[i] = -2; // marks to skip
+			continue; // hasn't evaluate
+		}
+		else
+		{
+			pearson = calcPearsonCorrelation(desired, array[i], nElements);
+			if(pearson >= 0.7) 
+			{
+				demRes += pearson;
+				//cur_average = calcUserAverageRate(array[i], nElements);
+				cur_average = array[i]->rating[itemID] - calcUserAverageRate(array[i], nElements);
+				numRes += (pearson * cur_average);
+				// user has evaluated this item
+			}
+		}
+
+	}
+	
+	pred = des_average + (numRes / demRes);
+	
+  return pred;
 }
 
 float predictRateByItem()
@@ -180,11 +216,10 @@ float predictRateByItem()
 int main(int argc, char *argv[])
 {
 
-  int targetItemId = -1, nElements = 0, timesReaded = 0, maxLines = 0;
+  int targetItemId = -1, nElements = 0, timesReaded = 0, maxLines = 0, evaluated = -1;
   char *targetUserName, readBuffer[1024], charBuffer, *filename;
   FILE *fp;
   User *targetUser = NULL;
-  
   
   if(argc != 4)
   {
@@ -195,6 +230,7 @@ int main(int argc, char *argv[])
   filename = argv[1];
   targetUserName = argv[2];
   sscanf(argv[3], "%d", &targetItemId);
+  targetItemId--;
   
   fp = fopen(filename, "r");
   if(fp == NULL)
@@ -262,7 +298,7 @@ int main(int argc, char *argv[])
 		  timesReaded++;
 	  }
   }
-  
+   
   if(targetUser == NULL)
   {
 	  printf("Usuário não encontrado!\n");
@@ -270,19 +306,33 @@ int main(int argc, char *argv[])
   }
   else
   {
-	  printf("Usuário %s:\n\tAvaliou %d Itens.\n", targetUser->name, findAmmountOfRatesByUser(targetUser, nElements));
-	  if(getUserItemRate(targetUser, targetItemId) != -1)
+	  printf("----------------------| Usuário %s |----------------------\n", targetUser->name);
+	  printf("Avaliou %d Itens.\n", findAmmountOfRatesByUser(targetUser, nElements));
+	  //evaluated = getUserItemRate(targetUser, targetItemId);
+	  // usuário avaliou o item
+	  if(targetUser->rating[targetItemId] != -1)
 	  {
-		  printf("\tAvaliou o Item solicitado em %c\n", getUserItemRate(targetUser, targetItemId));
+		  printf("Avaliou o Item solicitado: %c.\n", targetUser->rating[targetItemId]);
 	  }
-	  printf("\nO Item Pesquisado foi avaliado %d vezes\n", timesReaded);
+	  // usuário não avaliou o item
+	  else
+	  {
+		  float pred1 = -1.0f, pred2 = -1.0f;
+		  pred1 = predictRateByUser(usersArray, maxLines, targetUser, targetItemId, nElements);
+		  printf("Não avaliou o Item Solicitado!!!\n\t|-Previsão por Usuário: %.2f\n\t|-Previsão por Item: %.2f\n", pred1, pred2);
+	  }
+	  printf("O Item Pesquisado foi avaliado %d vezes\n", timesReaded);
+	  printf("--------------------------------------------------------\n");
 	  
+	  return 0;
   }
    
-  float rel = calcPearsonCorrelation(usersArray[0], usersArray[1], nElements);
+  /* testes manuais, ficaram aqui de recordação.
+   * 
+   * float rel = calcPearsonCorrelation(usersArray[0], usersArray[1], nElements);
   printf("Relacao de %s com %s: %.2f\n", usersArray[0]->name, usersArray[1]->name, rel);
   rel = calcPearsonCorrelation(usersArray[0], usersArray[2], nElements);
   printf("Relacao de %s com %s: %.2f\n", usersArray[0]->name, usersArray[2]->name, rel);
 
-  return 0;
+  return 0;*/
 }
