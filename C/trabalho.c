@@ -1,0 +1,288 @@
+/* para compilar
+gcc trabalho01.h trabalho.c -o ia -Wall `pkg-config --cflags --libs gtk+-3.0` -lm
+*/
+#include "trabalho01.h"
+
+User *generateUser(char *buffer, int nRatings)
+{
+  int pos = 0, ratePos = 0, state = 0, size, rateAux = NULL;
+  User *newUser = malloc(sizeof(User));
+  
+  newUser->name = "None";
+  newUser->rating = (int*) calloc(nRatings, sizeof(int));
+  
+  char *tempBuffer = "";
+
+  size = strlen(buffer);
+
+  do {
+
+    if(state == 0 && buffer[pos] == ';')
+    {
+      // names
+      //strncpy(tempBuffer, buffer, pos-1);
+      //tempBuffer[pos] = '\0';
+      tempBuffer = buffer;
+      strtok(tempBuffer, ";");
+      newUser->name = malloc(strlen(tempBuffer) * sizeof(char));
+      newUser->name = strcpy(newUser->name, tempBuffer);
+      state = 1;
+    }
+    else if(state == 1 && buffer[pos] != ';')
+    {
+		// ratings
+        switch(buffer[pos])
+        {
+			case '?': 
+				newUser->rating[ratePos] = -1;
+				break;
+				
+			default:
+				rateAux = buffer[pos];
+				newUser->rating[ratePos] = rateAux;
+				rateAux = NULL;
+				break;
+		}
+		ratePos++;
+    }
+    pos++;
+  }while(pos < size);
+   
+  return newUser;
+
+}
+
+//void setRate(User *a, int itemID, int rate)
+//{
+//  a->rating[itemID] = rate;
+//}
+
+int getUserItemRate(User *target, int itemID)
+{
+  if(target->rating[itemID] != '?' || target->rating[itemID] != -1)
+  {
+    return target->rating[itemID];
+  }
+  else
+  {
+    printf("\nItem nao avaliado!\n");
+    return -1;
+  }
+}
+
+//int *getUserRates(User *target)
+//{
+//  return target->rating;
+//}
+
+int findAmmountOfRatesByUser(User *target, int nElements)
+{
+  int total = 0;
+
+  for(int i=0; i<nElements; i++)
+  {
+    if(target->rating[i] != '?' && target->rating[i] != -1)
+    {
+      total++;
+    }
+  }
+
+  return total;
+}
+
+int hasEvaluatedItem(User *target, int itemID)
+{
+  if(target->rating[itemID] != '?' && target->rating[itemID] != -1)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+
+}
+
+float calcUserAverageRate(User *target, int nElements)
+{
+  float average = 0.0f;
+  int count = 0;
+
+  for(int i=0; i<nElements; i++)
+  {
+    if(target->rating[i] != '?' && target->rating[i] != -1)
+    {
+      count++;
+      average+= target->rating[i];
+    }
+  }
+
+  average /= count;
+
+  return average;
+}
+
+float calcPearsonCorrelation(User *a, User *b, int nElements)
+{
+
+  float pearson = 0.0f, pearsonNum = 0.0f, pearsonDen = 0.0f;
+  float tempA = 0.0f, tempB = 0.0f, tempC = 0.0f, tempD = 0.0f;
+
+  // int ratedItens[MAXITENS]; // Store the itens that are rated by both users | 1 = rated by both, 0 otherwise
+  int nRates = 0;
+
+
+  // loop that verify the itens that has been rated by each user and set the itens that can be used to calculate the similarity
+  for(int i=0; i<nElements; i++)
+  {
+    if(a->rating[i] == -1)
+    {
+      // ratedItens[i] = 0;
+    }
+    else if(b->rating[i] == -1)
+    {
+      // ratedItens[i] = 0;
+    }
+    else // if both users have rated this item
+    {
+      // ratedItens[i] = 1;
+      nRates++;
+      tempA += a->rating[i]; //stores the Sum of the rates from A
+      tempB += b->rating[i]; //stores the Sum of the rates from B
+      pearsonNum += a->rating[i] * b->rating[i];
+      tempC += pow(a->rating[i], 2); // stores the Sum of the rate² from A
+      tempD += pow(b->rating[i], 2); // stores the Sum of the rate² from B
+    }
+  }
+
+  // tempE = tempA * tempB; //(sumX)(sumY)
+  // tempE /= nRates; //((sumX)(sumY)/n)
+  pearsonNum -= (tempA * tempB) / nRates; // sumXY - ((sumX)(sumY)/n)
+  tempC -= pow(tempA, 2) / nRates; // sumX² - ((sumX)²/n)
+  tempD -= pow(tempB, 2) / nRates; // sumY² - ((sumY)²/n)
+  pearsonDen = sqrt(tempC * tempD);
+
+  pearson = pearsonNum / pearsonDen;
+
+  return pearson;
+}
+
+float predictRateByUser(User *a, int itemID, FILE *source)
+{
+  return 0.0f;
+}
+
+float predictRateByItem()
+{
+  return 0.0f;
+}
+
+int main(int argc, char *argv[])
+{
+
+  int targetItemId = -1, nElements = 0, timesReaded = 0, maxLines = 0;
+  char *targetUserName, readBuffer[1024], charBuffer, *filename;
+  FILE *fp;
+  User *targetUser = NULL;
+  
+  
+  if(argc != 4)
+  {
+    fprintf(stderr,"Formato : %s Arquivo (string) Usuário (string) Item# (int)\n",argv[0]);
+    return 1;
+  }
+  
+  filename = argv[1];
+  targetUserName = argv[2];
+  sscanf(argv[3], "%d", &targetItemId);
+  
+  fp = fopen(filename, "r");
+  if(fp == NULL)
+  {
+    printf("File couldn't be loaded!\n");
+    return 0;
+  }
+  
+  while(feof(fp) == 0)
+  {
+    charBuffer = fgetc(fp);
+    if(charBuffer == '\n')
+    {
+      maxLines++; // ammount of rows on the file
+    }
+  }
+
+  rewind(fp); // reset buffer position
+  maxLines--; // removes the header line
+
+  fscanf(fp, "%s", readBuffer); // header line
+  int size = strlen(readBuffer);
+
+  for(int i=0; i<size; i++)
+  {
+    if(readBuffer[i] == ';')
+    {
+      nElements++; // stores the ammount of columns in the file
+    }
+  }
+  
+  if(targetItemId > nElements)
+  {
+	  fprintf(stderr,"Escopo incorreto!\nNão existe a coluna %d, este arquivo possui apenas %d colunas!\n\n", targetItemId, nElements );
+	  return 1;
+  }
+
+  User *usersArray[maxLines];
+  
+  while(feof(fp) == 0 && timesReaded < maxLines)
+  {
+    fscanf(fp, "%s", readBuffer);
+
+    if(readBuffer[0] != '\0')
+    {
+	  usersArray[timesReaded] = generateUser(readBuffer, nElements);
+      timesReaded++;
+      readBuffer[0] = '\0';
+    }
+  }
+  
+  fclose(fp);
+  timesReaded = 0; // reseta o valor
+  
+  // finding the user
+  for(int i=0; i<maxLines; i++)
+  {
+	  if(strcmp(usersArray[i]->name, targetUserName) == 0)
+	  {
+		  targetUser = usersArray[i];
+	  }
+	  // contabiliza o # de vezes que esse valor foi medido
+	  if(usersArray[i]->rating[targetItemId] != -1)
+	  {
+		  timesReaded++;
+	  }
+  }
+  
+  if(targetUser == NULL)
+  {
+	  printf("Usuário não encontrado!\n");
+	  return 1;
+  }
+  else
+  {
+	  printf("Usuário %s:\n\tAvaliou %d Itens.\n", targetUser->name, findAmmountOfRatesByUser(targetUser, nElements));
+	  if(getUserItemRate(targetUser, targetItemId) != -1)
+	  {
+		  printf("\tAvaliou o Item solicitado em %c\n", getUserItemRate(targetUser, targetItemId));
+	  }
+	  printf("\nO Item Pesquisado foi avaliado %d vezes\n", timesReaded);
+	  
+  }
+   
+  float rel = calcPearsonCorrelation(usersArray[0], usersArray[1], nElements);
+  printf("Relacao de %s com %s: %.2f\n", usersArray[0]->name, usersArray[1]->name, rel);
+  rel = calcPearsonCorrelation(usersArray[0], usersArray[2], nElements);
+  printf("Relacao de %s com %s: %.2f\n", usersArray[0]->name, usersArray[2]->name, rel);
+
+  return 0;
+}
