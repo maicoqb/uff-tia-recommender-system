@@ -10,9 +10,11 @@
 	- Número da coluna referete ao item que você deseja que seja avaliado. Inicia a contagem em 1 (primeira coluna = 1). 
 ## Exemplo
 
-	```bash
-        $ main dataset.csv A1 5
-        ```
+Exemplo de chamada do programa no terminal:
+
+```
+$ main dataset.csv A1 5
+```
 
 ## Observações:
 Caso você chame o programa sem passar exatamente quatro parâmetros ele dá erro e informa no console.
