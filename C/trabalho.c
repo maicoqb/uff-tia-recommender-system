@@ -1,5 +1,8 @@
-/* para compilar
+/* para compilar quando utiliza o gtk para interface gráfica
 gcc trabalho01.h trabalho.c -o ia -Wall `pkg-config --cflags --libs gtk+-3.0` -lm
+* 
+* caso não utilize o gtk apenas executar o Make!!
+* 
 */
 #include "trabalho01.h"
 
@@ -19,9 +22,6 @@ User *generateUser(char *buffer, int nRatings)
 
     if(state == 0 && buffer[pos] == ';')
     {
-      // names
-      //strncpy(tempBuffer, buffer, pos-1);
-      //tempBuffer[pos] = '\0';
       tempBuffer = buffer;
       strtok(tempBuffer, ";");
       newUser->name = malloc(strlen(tempBuffer) * sizeof(char));
@@ -45,37 +45,14 @@ User *generateUser(char *buffer, int nRatings)
 		}
 		ratePos++;
     }
+    
     pos++;
+    
   }while(pos < size);
    
   return newUser;
 
 }
-
-//void setRate(User *a, int itemID, int rate)
-//{
-//  a->rating[itemID] = rate;
-//}
-
-int getUserItemRate(User *target, int itemID)
-{
-	char d = '?';
-	printf("? = %d ou %c\n", d, d);
-  if(target->rating[itemID] != '?' || target->rating[itemID] != -1)
-  {
-    return target->rating[itemID];
-  }
-  else
-  {
-    printf("\nItem nao avaliado!\n");
-    return -1;
-  }
-}
-
-//int *getUserRates(User *target)
-//{
-//  return target->rating;
-//}
 
 int findAmmountOfRatesByUser(User *target, int nElements)
 {
@@ -90,19 +67,6 @@ int findAmmountOfRatesByUser(User *target, int nElements)
   }
 
   return total;
-}
-
-int hasEvaluatedItem(User *target, int itemID)
-{
-  if(target->rating[itemID] != '?' && target->rating[itemID] != -1)
-  {
-    return 0;
-  }
-  else
-  {
-    return 1;
-  }
-
 }
 
 float calcUserAverageRate(User *target, int nElements)
@@ -137,13 +101,9 @@ float calcPearsonCorrelation(User *a, User *b, int nElements)
   // loop that verify the itens that has been rated by each user and set the itens that can be used to calculate the similarity
   for(int i=0; i<nElements; i++)
   {
-    if(a->rating[i] == -1)
+    if(a->rating[i] == -1 || b->rating[i] == -1)
     {
-      // ratedItens[i] = 0;
-    }
-    else if(b->rating[i] == -1)
-    {
-      // ratedItens[i] = 0;
+      continue; // someone hasn't evaluated an item
     }
     else // if both users have rated this item
     {
@@ -157,15 +117,14 @@ float calcPearsonCorrelation(User *a, User *b, int nElements)
     }
   }
 
-  // tempE = tempA * tempB; //(sumX)(sumY)
-  // tempE /= nRates; //((sumX)(sumY)/n)
   pearsonNum -= (tempA * tempB) / nRates; // sumXY - ((sumX)(sumY)/n)
   tempC -= pow(tempA, 2) / nRates; // sumX² - ((sumX)²/n)
   tempD -= pow(tempB, 2) / nRates; // sumY² - ((sumY)²/n)
   pearsonDen = sqrt(tempC * tempD);
 
   pearson = pearsonNum / pearsonDen;
-
+  //printf("Pearson entre %s e %s = %.2f\n", a->name, b-> name, pearson);
+	
   return pearson;
 }
 
@@ -180,13 +139,13 @@ float predictRateByUser(User **array, int a_size, User *desired, int itemID, int
 	{
 		if(desired == array[i])
 		{
-			//pearson[i] = 2; // represets itself
+			// represets itself
 			continue;
 		}
 		else if(array[i]->rating[itemID] == -1)
 		{
-			//pearson[i] = -2; // marks to skip
-			continue; // hasn't evaluate
+			// marks to skip in case it hasn't evaluate
+			continue;
 		}
 		else
 		{
@@ -194,10 +153,8 @@ float predictRateByUser(User **array, int a_size, User *desired, int itemID, int
 			if(pearson >= 0.7) 
 			{
 				demRes += pearson;
-				//cur_average = calcUserAverageRate(array[i], nElements);
 				cur_average = array[i]->rating[itemID] - calcUserAverageRate(array[i], nElements);
 				numRes += (pearson * cur_average);
-				// user has evaluated this item
 			}
 		}
 
@@ -298,7 +255,7 @@ int main(int argc, char *argv[])
 		  timesReaded++;
 	  }
   }
-   
+    
   if(targetUser == NULL)
   {
 	  printf("Usuário não encontrado!\n");
@@ -308,11 +265,10 @@ int main(int argc, char *argv[])
   {
 	  printf("----------------------| Usuário %s |----------------------\n", targetUser->name);
 	  printf("Avaliou %d Itens.\n", findAmmountOfRatesByUser(targetUser, nElements));
-	  //evaluated = getUserItemRate(targetUser, targetItemId);
 	  // usuário avaliou o item
 	  if(targetUser->rating[targetItemId] != -1)
 	  {
-		  printf("Avaliou o Item solicitado: %c.\n", targetUser->rating[targetItemId]);
+		  printf("Avaliou o Item solicitado: %d.\n", targetUser->rating[targetItemId]);
 	  }
 	  // usuário não avaliou o item
 	  else

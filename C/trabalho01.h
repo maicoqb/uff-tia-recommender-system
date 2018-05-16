@@ -10,12 +10,7 @@ typedef struct user{
 } User;
 
 User *generateUser(char *buffer, int nRatings);
-//void setRate(User *a, int itemID, int rate);
-int defineColumnsConstant(int value);
-int getUserItemRate(User *target, int itemID);
-//int *getUserRates(User *target);
 int findAmmountOfRatesByUser(User *target, int nElements);
-int hasEvaluatedItem(User *target, int itemID);
 float calcUserAverageRate(User *target, int nElements);
 float calcPearsonCorrelation(User *a, User *b, int nElements);
 float predictRateByUser(User **array, int a_size, User *desired, int itemID, int nElements);
