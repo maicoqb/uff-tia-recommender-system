@@ -9,8 +9,9 @@
  - Item #  [int]
 	- Número da coluna referete ao item que você deseja que seja avaliado. Inicia a contagem em 1 (primeira coluna = 1). 
 ## Exemplo
+
 	```bash
-        $ main ARQUIVO USUARIO ITEM
+        $ main dataset.csv A1 5
         ```
 
 ## Observações:
