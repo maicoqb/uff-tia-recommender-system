@@ -8,11 +8,12 @@ gcc trabalho01.h trabalho.c -o ia -Wall `pkg-config --cflags --libs gtk+-3.0` -l
 
 User *generateUser(char *buffer, int nRatings)
 {
-  int pos = 0, ratePos = 0, state = 0, size, rateAux = NULL;
+  int pos = 0, ratePos = 0, state = 0, size;
+  float rateAux = -1.0f;
   User *newUser = malloc(sizeof(User));
   
   newUser->name = "None";
-  newUser->rating = (int*) calloc(nRatings, sizeof(int));
+  newUser->rating = (float*) calloc(nRatings, sizeof(float));
   
   char *tempBuffer = "";
 
@@ -38,9 +39,9 @@ User *generateUser(char *buffer, int nRatings)
 				break;
 				
 			default:
-				sscanf(&buffer[pos], "%d", &rateAux);
+				sscanf(&buffer[pos], "%f", &rateAux);
 				newUser->rating[ratePos] = rateAux;
-				rateAux = NULL;
+				rateAux = -1.0f;
 				break;
 		}
 		ratePos++;
@@ -130,7 +131,7 @@ float calcPearsonCorrelation(User *a, User *b, int nElements)
 
 float predictRateByUser(User **array, int a_size, User *desired, int itemID, int nElements)
 {
-	float pred = -0.5f, demRes = 0, rateDiff = 0, numRes = 0, pearson = 0, des_average, cur_average;
+	float pred = -0.5f, demRes = 0, numRes = 0, pearson = 0, des_average, cur_average;
 	
 	des_average = calcUserAverageRate(desired, nElements);
 	
@@ -173,7 +174,7 @@ float predictRateByItem()
 int main(int argc, char *argv[])
 {
 
-  int targetItemId = -1, nElements = 0, timesReaded = 0, maxLines = 0, evaluated = -1;
+  int targetItemId = -1, nElements = 0, timesReaded = 0, maxLines = 0;
   char *targetUserName, readBuffer[1024], charBuffer, *filename;
   FILE *fp;
   User *targetUser = NULL;
@@ -268,7 +269,7 @@ int main(int argc, char *argv[])
 	  // usuário avaliou o item
 	  if(targetUser->rating[targetItemId] != -1)
 	  {
-		  printf("Avaliou o Item solicitado: %d.\n", targetUser->rating[targetItemId]);
+		  printf("Avaliou o Item solicitado: %.2f.\n", targetUser->rating[targetItemId]);
 	  }
 	  // usuário não avaliou o item
 	  else

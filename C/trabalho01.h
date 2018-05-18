@@ -6,7 +6,7 @@
 
 typedef struct user{
   char *name;
-  int *rating;
+  float *rating;
 } User;
 
 User *generateUser(char *buffer, int nRatings);
